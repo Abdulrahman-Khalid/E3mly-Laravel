@@ -14,6 +14,12 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth'); //redirect to login page if not logged in 
+    }
+
     public function index()
     {
         $posts = Post::orderBy('created_at', 'desc')->paginate(5);

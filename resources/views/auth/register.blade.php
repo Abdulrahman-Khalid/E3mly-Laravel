@@ -61,6 +61,24 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="dateOfBirth" class="col-md-4 col-form-label text-md-right">{{ __('Date Of birth') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="dateOfBirth" type="date" name="dateOfBirth" class="form-control" min="1920-01-01" max="2010-01-01" required><br><br>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label class="col-md-4"></label>
+                        <div class="radio">
+                            <label><input type="radio" class="col-md-2" name="gender" value="Male">Male</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" class="col-md-2" name="gender" value="Female">Female</label>
+                        </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
