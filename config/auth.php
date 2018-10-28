@@ -122,17 +122,17 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
-            'expire' => 60,
+            'expire' => 60, //how long to expire token
         ],
         'moderators' => [
             'provider' => 'moderators',
             'table' => 'password_resets',
-            'expire' => 60,
+            'expire' => 15,
         ],
         'admins' => [
             'provider' => 'admins',
             'table' => 'password_resets',
-            'expire' => 60,
+            'expire' => 5,
         ],
     ],
 
