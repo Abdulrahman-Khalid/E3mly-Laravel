@@ -54,7 +54,7 @@
                                             <label style="font-weight:bold;">Birth Date</label>
                                         </div>
                                         <div class="col-md-8 col-6">
-                                            {{$user->dateOfBirth}}
+                                            {{$user->birthdate}}
                                         </div>
                                     </div>
                                     <hr />

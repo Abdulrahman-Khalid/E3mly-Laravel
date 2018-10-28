@@ -15,12 +15,14 @@ class CreateModeratorsTable extends Migration
     {
         Schema::create('moderators', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->date('dateOfBirth');
-            $table->string('bio', 300)->nullable();
+            $table->string('name');
+            $table->date('birthdate');
             $table->string('gender', 6);
+            $table->string('profile_picture')->nullable();
+            $table->string('country');
+            $table->string('bio', 300)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

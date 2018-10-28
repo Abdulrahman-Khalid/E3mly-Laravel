@@ -18,7 +18,7 @@ class Moderator extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'dateOfBirth','bio', 'gender',
+        'name', 'email', 'password', 'birthdate','bio', 'gender', 'country', 'profile_picture',
     ];
 
     /**
