@@ -23,8 +23,10 @@ class CreateProjectsTable extends Migration
             $table->date('finish_date')->nullable();
             $table->date('rating')->nullable();
             $table->integer('status')->default(0);
-            $table->integer('craftman_id');
-            $table->integer('customer_id');
+            $table->unsignedInteger('craftman_id');
+            $table->foreign('craftman_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('customer_id');
+            $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('category');                        
             $table->timestamp('created_at')->nullable();  
         });

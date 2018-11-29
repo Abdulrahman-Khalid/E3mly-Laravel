@@ -15,7 +15,7 @@ Route::get('/', 'PagesController@index');
 Route::resource('/posts', 'PostsController');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 Route::prefix('moderator')->group(function() {
