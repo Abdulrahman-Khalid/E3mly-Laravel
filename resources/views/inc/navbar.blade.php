@@ -22,7 +22,7 @@
                         <a class="nav-link text-white" href="/posts/create">create project</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="feedback/create">create Feedback</a>
+                        <a class="nav-link text-white" href="/feedback/create">create Feedback</a>
                     </li>
                     @endauth
                 </ul>
