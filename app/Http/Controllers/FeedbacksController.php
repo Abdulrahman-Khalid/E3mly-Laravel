@@ -1,9 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use DB ;
+use Carbon\Carbon;
+Use App\Helpers\DB\CustomDB;
+
+
 class FeedbacksController extends Controller
 {
     /**
@@ -46,15 +51,28 @@ class FeedbacksController extends Controller
         $this->Validate($request, [
             'name' => 'required',
             'body' => 'required'
+
         ]);
-        //Insert into query
-        
+        $user_id = Auth::id();
+        $created_at = Carbon::now()->toDateTimeString();  
         $title = $request->input('title');
         $body = $request->input('body');
-        //DB::insert('insert into feedbacks (id,type, body) values (?,?,?)', [1 ,$title, $body]);
+
+        $check = CustomDB::getInstance()->insert("feedbacks", array(
+           'type' => $title,
+            'body' => $body,
+            'user_id' => $user_id,
+            'post_id' => 1,
+            'moderator_id'=>3,
+            'created_at' => $created_at
+        ))->e();
+
+        if($check) {
+            return redirect('/')->with('success', 'Feedback submitted');
+        }
+        return redirect('/')->with('error', 'Feedback Failed to be Submitted');
         
 
-        return redirect('/')->with('success', 'Feedback submitted');
 
     }
 

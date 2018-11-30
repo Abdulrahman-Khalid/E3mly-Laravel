@@ -13,6 +13,7 @@
 
 Route::get('/', 'PagesController@index');
 Route::resource('/posts', 'PostsController');
+Route::resource('/feedback', 'FeedbacksController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -41,4 +42,3 @@ Route::prefix('admin')->group(function() {
     Route::post('/password/reset','Auth\AdminResetPasswordController@reset')->name('admin.password.update');
     Route::get('/password/reset/{token}','Auth\AdminResetPasswordController@showResetForm')->name('admin.password.reset');
 });
-Route::resource('/feedback', 'FeedbacksController');

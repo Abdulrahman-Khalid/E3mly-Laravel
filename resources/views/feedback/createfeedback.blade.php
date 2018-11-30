@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Create Feedback</h1>
-    {!! Form::open(['action' => 'FeedbacksController@store', 'method' => 'POST']) !!}
+    {!! Form::open(['action' => 'FeedbacksController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
         <div class="form-group">
             {{Form::label('title', 'Problem')}}
@@ -47,12 +47,12 @@
 
         <div class="form-group">
             {{Form::label('body', 'Description')}}
-            {{Form::textarea('body', '', ['id' => 'article-ckeditor', 'class' => 'form-control', 'placeholder' => 'Write your feedback description in detail'])}}
+            {{Form::textarea('body', '', ['id' => 'article-ckeditor', 'class' => 'form-control'])}}
         </div>
 
 
 
-        {{Form::submit('Submit', ['class'=> 'btn btn-success'])}}
+        {{Form::submit('Submit',  ['class'=> 'btn btn-success btn-lg', 'style' => 'margin-bottom:30px; text-align:center; height:3em; width:11em;'])}}
     {!! Form::close() !!}
 
 
