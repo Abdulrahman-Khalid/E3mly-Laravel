@@ -28,4 +28,6 @@ class HomeController extends Controller
         $posts = $user->posts();
         return view('home')->with('user', $user); // $user->posts from the relationship
     }
+
+    
 }

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use DB ;
 use Carbon\Carbon;
 Use App\Helpers\DB\CustomDB;
-
+use App\feedback;
 
 class FeedbacksController extends Controller
 {
@@ -19,14 +19,26 @@ class FeedbacksController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth'); 
+        //$this->middleware('auth');
+       // $this->middleware('auth:admin');
         //redirect to login page if not logged in 
     }
 
     public function index()
     {
-        //
-       return  view('feedback.showfeedback');
+        //Only admins and moderators has the right to access the feedback
+        //so, when a user attempts to access it, he gets redirected to the home page
+
+
+
+        if(Auth::guard('admin')->check()||Auth::guard('moderator')->check())
+           { 
+                $feedbacks = CustomDB::getInstance()->get(array("*"),"feedbacks")->order("created_at DESC")->e()->results();
+                return  view('feedback.index')->with('feedbacks', $feedbacks);
+            }       
+        else
+           return redirect('/');
+       
     }
 
     /**
@@ -34,10 +46,15 @@ class FeedbacksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
-      return view('feedback.createfeedback');
+     
+        $id = $request->input('post_id');   
+       if(Auth::guard('web')->check()||Auth::guard('moderator')->check())
+            return view('feedback.createfeedback')->with('post_id',$id);
+        else
+           return redirect('/');  
+      
     }
 
     /**
@@ -48,25 +65,32 @@ class FeedbacksController extends Controller
      */
     public function store(Request $request)
     {
+
+
+        //I need the post_id and user_id from its relation
+        //first , i need post_id from as a POST method
         $this->Validate($request, [
             'name' => 'required',
             'body' => 'required'
-
         ]);
+
         $user_id = Auth::id();
         $created_at = Carbon::now()->toDateTimeString();  
-        $title = $request->input('title');
-        $body = $request->input('body');
-
+        $title = $request->input('name');
+        $body = $request->input('body');    
+        $post_id = $request->input('post_id');
         $check = CustomDB::getInstance()->insert("feedbacks", array(
            'type' => $title,
             'body' => $body,
             'user_id' => $user_id,
-            'post_id' => 1,
-            'moderator_id'=>3,
+            'post_id'=> $post_id,            
             'created_at' => $created_at
-        ))->e();
 
+        ))->e();
+        
+/*
+        DB::insert('insert into feedbacks (type,body,user_id,created_at) values (?,?,?,?)', [$title,$body,$user_id,$created_at]);
+*/
         if($check) {
             return redirect('/')->with('success', 'Feedback submitted');
         }
@@ -84,7 +108,10 @@ class FeedbacksController extends Controller
      */
     public function show($id)
     {
-        //
+        $sql = CustomDB::getInstance()->get(array("*"), "feedbacks")->where("id = ?",[$id])->e();
+        $feedback = $sql->results();
+       // return $feedback;
+        return view('feedback.showfeedback')->with('fb', $feedback);
     }
 
     /**

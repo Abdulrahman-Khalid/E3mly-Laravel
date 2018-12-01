@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Create Feedback</h1>
-    {!! Form::open(['action' => 'FeedbacksController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+    {!! Form::open(['action' => ['FeedbacksController@store',$post_id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
         <div class="form-group">
             {{Form::label('title', 'Problem')}}
