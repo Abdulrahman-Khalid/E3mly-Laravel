@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark navbar-laravel">
+<nav class="navbar navbar-expand-md navbar-laravel bg-primary" style="margin-bottom:10px;">
     <div class="container">
-        <a class="navbar-brand" href="{{ url('/') }}">
+        <a class="navbar-brand text-white" href="{{ url('/') }}">
             {{ config('app.name', 'E3mly') }}
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -14,35 +14,61 @@
             </ul>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/posts">view posts</a>
-                    </li>
+                    <!--
+                    show feedback for both mod. and admins
+                    
+                    -->
+                    
+                  
+                    @if(Auth::guard('admin')->check()||Auth::guard('moderator')->check())
+                    
+                     <li class="nav-item">
+                        <a class="nav-link text-white" href="/feedback">Feedbacks only for admins</a>
+                    </li>   
+                    
+
+                    @else
                     @auth
+
                     <li class="nav-item">
-                        <a class="nav-link" href="/posts/create">create project</a>
+                        <a class="nav-link text-white" href="/posts">view posts</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/posts/create">create project</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/feedback/create">create Feedback</a>
+                    </li>
+                    
                     @endauth
+
+                    @endif
                 </ul>
             </div>
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
-                @guest
+                @if(Auth::guest())
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        <a class="nav-link text-white" href="{{ route('login') }}"><i class="fa fa-sign-in-alt "></i> {{ __('Login') }}</a>
                     </li>
                     <li class="nav-item">
                         @if (Route::has('register'))
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            <a class="nav-link text-white" href="{{ route('register') }}"><i class="fa fa-user-plus "></i> {{ __('Register') }}</a>
                         @endif
                     </li>
                 @else
+                    <li class="na-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <span class="fa fa-globe-africa"style="margin-right:5px;"></span>Notifications <span class="badge badge-danger">2<span>
+                        </a>     
+                    </li>
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
 
-                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu"> 
                             <li><a class="dropdown-item" href="/home">Dashboard<a></li>
                             <li>
                             <a class="dropdown-item" href="{{ route('logout') }}"

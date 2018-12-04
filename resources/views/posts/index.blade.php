@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
     <h1>Posts</h1>
     @if(count($posts) > 0)
@@ -9,7 +8,6 @@
                 <small>posted at {{$post->created_at}}</small>
             </div>
         @endforeach
-        </footer> {{$posts->links()}}</footer>
     @else
         <p>No posts found</p>
     @endif

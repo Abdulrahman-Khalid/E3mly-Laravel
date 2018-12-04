@@ -1,0 +1,23 @@
+/* Hide the file input using
+opacity */
+[type=file] {
+    position: absolute;
+    filter: alpha(opacity=0);
+    opacity: 0;
+}
+input,
+[type=file] + label {
+  text-align: left;
+  padding: 20px;
+  position: relative;
+}
+[type=file] + label {
+  text-align: center;
+  /* Decorative */
+  background:  #009688;
+  color: #fff;
+  cursor: pointer;
+}
+[type=file] + label:hover {
+  background: #26a69a;
+}

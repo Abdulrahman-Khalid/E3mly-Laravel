@@ -22,7 +22,10 @@ class CreatePostsTable extends Migration
             $table->string('description_file')->nullable();
             $table->integer('period')->unsigned();
             $table->integer('reports_num')->default(0);
-            $table->integer('user_id')->unsigned();
+
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->integer('proposals_num')->default(0);
             $table->string('category');                        
             $table->timestamp('created_at')->nullable();
