@@ -13,4 +13,9 @@ class PagesController extends Controller
     public function createproject() {
         return view('pages.createproject');
     }
+/*
+    public function feedback() {
+        return view('pages.feedback');
+    }
+*/
 }
