@@ -32,7 +32,7 @@
                                     <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="Posts-tab" data-toggle="tab" href="#Posts" role="tab" aria-controls="Posts" aria-selected="false">Posts</a>
+                                    <a class="nav-link" id="Posts-tab" data-toggle="tab" href="#Posts" role="tab" aria-controls="Posts" aria-selected="false">My Posts</a>
                                 </li>
                             </ul>
                             <div class="tab-content ml-1" id="myTabContent">
@@ -88,7 +88,17 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="Posts" role="tabpanel" aria-labelledby="Posts-tab">
-                                    
+                                    <h1>Please select a post to view its proposals</h1>
+                                    @if(count($userPosts) > 0)
+                                        @foreach($userPosts as $userPost)
+                                        <div class="well well-lg">
+                                            <h3><a href="/proposals/{{$userPost->id}}">{{$userPost->title}}</a></h3>
+                                            <small>post created at {{$userPost->created_at}}</small>
+                                        </div>
+                                        @endforeach
+                                    @else
+                                    <p>You haven't posted anything, yet</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>

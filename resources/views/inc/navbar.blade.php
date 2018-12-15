@@ -31,14 +31,15 @@
                     @auth
 
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts">view posts</a>
+                        <a class="nav-link text-white" href="/posts/create">Create project</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts/create">create project</a>
+                        <a class="nav-link text-white" href="/posts">View posts</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/feedback/create">create Feedback</a>
+                        <a class="nav-link text-white" href="/feedback/create">Create feedback</a>
                     </li>
+                    
                     
                     @endauth
 

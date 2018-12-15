@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use DB;
+Use App\Helpers\DB\CustomDB;
 
 class HomeController extends Controller
 {
@@ -25,8 +28,9 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $posts = $user->posts();
-        return view('home')->with('user', $user); // $user->posts from the relationship
+        $user_id = Auth::id();
+        $posts = CustomDB::getInstance()->query("SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC",[$user_id])->results();
+        return view('home')->with('user', $user)->with('userPosts', $posts);
     }
 
     
