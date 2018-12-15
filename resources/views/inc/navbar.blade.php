@@ -14,17 +14,36 @@
             </ul>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
+                    <!--
+                    show feedback for both mod. and admins
+                    
+                    -->
+                    
+                  
+                    @if(Auth::guard('admin')->check()||Auth::guard('moderator')->check())
+                    
+                     <li class="nav-item">
+                        <a class="nav-link text-white" href="/feedback">Feedbacks only for admins</a>
+                    </li>   
+                    
+
+                    @else
                     @auth
+
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts">view posts</a>
+                        <a class="nav-link text-white" href="/posts/create">Create project</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts/create">create project</a>
+                        <a class="nav-link text-white" href="/posts">View posts</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/feedback/create">create Feedback</a>
+                        <a class="nav-link text-white" href="/feedback/create">Create feedback</a>
                     </li>
+                    
+                    
                     @endauth
+
+                    @endif
                 </ul>
             </div>
             <!-- Right Side Of Navbar -->

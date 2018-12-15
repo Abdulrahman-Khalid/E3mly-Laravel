@@ -14,6 +14,8 @@
 Route::get('/', 'PagesController@index');
 Route::resource('/posts', 'PostsController');
 Route::resource('/feedback', 'FeedbacksController');
+Route::resource('/proposals', 'ProposalController');
+Route::resource('/projects', 'ProjectsController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

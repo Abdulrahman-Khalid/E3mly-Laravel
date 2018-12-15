@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Proposal; //for using model functions(me)
+//use DB; //for using queries(me)
 
 class PagesController extends Controller
 {
