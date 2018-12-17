@@ -21,9 +21,10 @@ yet, different users arent able to report each users
 
 -->
     
-    {!! Form::open(['action' => ['FeedbacksController@create',$post[0]->id], 'method' => 'GET']) !!}
-        {{Form::hidden('_method','POST')}}
-        {{Form::submit('Report', ['class'=> 'btn btn-warning'])}}
-    {!! Form::close() !!}
+      <form method="GET" action="/feedback/create">
+        <input type="hidden" name="post_id" value="{{$post[0]->id}}"/>
+        <input class ="btn btn-warning" type="submit" name="Action" value="Report"/>
+      </form>
+       
 
 @endsection

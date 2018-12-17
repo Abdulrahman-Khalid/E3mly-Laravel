@@ -17,6 +17,7 @@ Route::resource('/feedback', 'FeedbacksController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::delete('{id}', 'HomeController@destroy')->middleware('auth:admin');
 Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 Route::prefix('moderator')->group(function() {

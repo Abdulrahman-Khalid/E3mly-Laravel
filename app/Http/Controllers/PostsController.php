@@ -19,15 +19,21 @@ class PostsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth'); //redirect to login page if not logged in 
+        //From Evram:
+            //I have to remove this main previlage, and type a certain previlage for each function,
+            //34an Mod. and admin y2dro y-access Destroy function
+            $this->middleware('auth'); //redirect to login page if not logged in 
+            $this->middleware('auth:admin')->only('destroy');
     }
 
     public function index()
     {
-        $posts = CustomDB::getInstance()->get(array("*"),"posts")->order("created_at DESC")->e()->results();
-        return view('posts.index')->with('posts', $posts);
-        //another code
-        //$posts = Post::orderBy('created_at', 'desc')->paginate(5);
+       
+            $posts = CustomDB::getInstance()->get(array("*"),"posts")->order("created_at DESC")->e()->results();
+            return view('posts.index')->with('posts', $posts);
+            //another code
+            //$posts = Post::orderBy('created_at', 'desc')->paginate(5);
+
     }
 
     /**
@@ -48,7 +54,7 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //validation
+          //validation
         $this->Validate($request, [
             'title' => 'required',
             'body' => 'required',
@@ -128,8 +134,8 @@ class PostsController extends Controller
         $post->category = $request->input('category');
         $post->user_id = Auth::id();
         $post->save();  
-        */
-    }
+        */      
+}
 
     /**
      * Display the specified resource.
@@ -139,11 +145,12 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $sql = CustomDB::getInstance()->get(array("*"), "posts")->where("id = ?",[$id])->e();
-        $post = $sql->results();
-        return view('posts.show')->with('post', $post);
-        //another code
-        //$post = Post::find($id);
+            $sql = CustomDB::getInstance()->get(array("*"), "posts")->where("id = ?",[$id])->e();
+            $post = $sql->results();
+            return view('posts.show')->with('post', $post);
+            //another code
+            //$post = Post::find($id);  
+      
     }
 
     /**
@@ -177,17 +184,23 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        $id = (int)$id;
-        //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
-        $check = CustomDB::getInstance()->delete("posts")->where("id = ?", [$id])->e();
-        if($check) {
-            return redirect('/posts')->with('success', 'Post Removed');
-        } 
-        return redirect('/posts')->with('error', 'Post Not Removed');
-        //another code
-        /*
-        $post = Post::find($id);
-        $post->getInstance()->delete();
-        */
-    }
+         
+            $id = (int)$id;
+            //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
+            $check = CustomDB::getInstance()->delete("posts")->where("id = ?", [$id])->e();
+            if($check)
+            {
+                //Evram: I change the redirecting path, 34an lma ymsa7 feedback
+                return redirect('/')->with('success', 'Post Removed');
+            } 
+            else
+                return redirect('/')->with('error', 'Post Not Removed');
+            //another code
+            /*
+            $post = Post::find($id);
+            $post->getInstance()->delete();
+            */
+       
+      
+    
 }

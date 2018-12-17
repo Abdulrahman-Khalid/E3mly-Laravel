@@ -20,29 +20,36 @@
                     -->
                     
                   
-                    @if(Auth::guard('admin')->check()||Auth::guard('moderator')->check())
+                    @if(Auth::guard('moderator')->check())
                     
-                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/feedback">Feedbacks only for admins</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/feedback">Feedbacks against Posts</a>
                     </li>   
-                    
-
-                    @else
-                    @auth
-
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts">view posts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts/create">create project</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/feedback/create">create Feedback</a>
-                    </li>
-                    
-                    @endauth
-
                     @endif
+
+                    @if(Auth::guard('admin')->check())
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/feedback">Feedbacks against Users</a>
+                        </li>
+                    
+                   
+                    @else 
+                        @auth
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/posts">view posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/posts/create">create project</a>
+                        </li>
+                        <!--
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/feedback/create">create Feedback</a>
+                        </li>
+                        -->
+                        @endauth
+                    @endif
+                   
                 </ul>
             </div>
             <!-- Right Side Of Navbar -->

@@ -9,25 +9,56 @@
 
     @if($fb == [])
         <h1>There is no Feedback with such an ID</h1>
-	@else 
+	@endif 
 
     <h1>{{$fb[0]->type}}</h1>
     
     <div>
         {!!$fb[0]->body!!}
     </div>
+
     <hr>
-    <small>posted at {{$fb[0]->created_at}}</small>
+    <small>reported at {{$fb[0]->created_at}}</small>
+    <!--
+    I need a few bottuns
+    1-Ignore Feedback--check
+    2-Delete that post--check
+    3-Report that user--lets
+    -->
+    @if(Auth::guard('moderator')->check())
+    {!! Form::open(['action' => ['FeedbacksController@destroy', $fb[0]->id], 'method' => 'POST']) !!}
+        {{Form::hidden('_method','DELETE')}}
+        {{Form::submit('Ignore', ['class'=> 'btn btn-warning'])}}
+    {!! Form::close() !!}
 
-     @endif
+
+    {!! Form::open(['action' => ['PostsController@destroy', $fb[0]->post_id], 'method' => 'POST']) !!}
+        {{Form::hidden('_method','DELETE')}}
+        {{Form::submit('Delete Post', ['class'=> 'btn btn-danger'])}}
+    {!! Form::close() !!}
+
+
+   
+    <form method="GET" action="/feedback/create">
+        <input type="hidden" name="post_id" value="{{$fb[0]->post_id}}"/>
+        <input class ="btn btn-warning" type="submit" name="Action" value="Request this user to be Deleted"/>
+    </form>
+    @else <!--Then the guard is admin-->
+     {!! Form::open(['action' => ['FeedbacksController@destroy', $fb[0]->id], 'method' => 'POST']) !!}
+        {{Form::hidden('_method','DELETE')}}
+        {{Form::submit('Ignore this report', ['class'=> 'btn btn-warning'])}}
+    {!! Form::close() !!}
+
+    
+    {!! Form::open(['action' => ['HomeController@destroy', $fb[0]->post_id], 'method' => 'POST']) !!}
+        {{Form::hidden('_method','DELETE')}}
+        {{Form::submit('Delete that user', ['class'=> 'btn btn-danger'])}}
+    {!! Form::close() !!} 
+  
+    @endif
 
 
 
-     <!--NOW I need a Solving methods
-        1-Ignore
-        2-Remove the Post
-        but before that, I just need to make sure that I have the Post_id
-     -->
-
+     
 
 @endsection
