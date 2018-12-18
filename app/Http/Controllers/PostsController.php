@@ -20,10 +20,10 @@ class PostsController extends Controller
     public function __construct()
     {
         //From Evram:
-            //I have to remove this main previlage, and type a certain previlage for each function,
-            //34an Mod. and admin y2dro y-access Destroy function
-            $this->middleware('auth'); //redirect to login page if not logged in 
-            $this->middleware('auth:admin')->only('destroy');
+            //awl wa7d bs ely bya5od authentication
+            //$this->middleware('auth'); //redirect to login page if not logged in 
+           // $this->middleware('auth:admin');
+            //$this->middleware('auth:moderator');
     }
 
     public function index()
@@ -148,9 +148,7 @@ class PostsController extends Controller
             $sql = CustomDB::getInstance()->get(array("*"), "posts")->where("id = ?",[$id])->e();
             $post = $sql->results();
             return view('posts.show')->with('post', $post);
-            //another code
-            //$post = Post::find($id);  
-      
+                 
     }
 
     /**
@@ -184,7 +182,7 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-         
+        
             $id = (int)$id;
             //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
             $check = CustomDB::getInstance()->delete("posts")->where("id = ?", [$id])->e();
@@ -200,6 +198,7 @@ class PostsController extends Controller
             $post = Post::find($id);
             $post->getInstance()->delete();
             */
+    }
        
       
     

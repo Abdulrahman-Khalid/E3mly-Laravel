@@ -24,31 +24,32 @@
                     
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/feedback">Feedbacks against Posts</a>
-                    </li>   
+                    </li> 
+
+                    <li class="nav-item">
+                            <a class="nav-link text-white" href="/moderator">All Posts</a>
+                    </li>
                     @endif
 
                     @if(Auth::guard('admin')->check())
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/feedback">Feedbacks against Users</a>
+                            <a class="nav-link text-white" href="/profile">Users</a>
                         </li>
-                    
-                   
-                    @else 
-                        @auth
 
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/feedback">Feedbacks against Users</a>
+                        </li>                                             
+                    @endif 
+                    
+                    @if(Auth::guard('web')->check())    
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/posts">view posts</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/posts/create">create project</a>
                         </li>
-                        <!--
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/feedback/create">create Feedback</a>
-                        </li>
-                        -->
-                        @endauth
-                    @endif
+                    @endif   
+                    
                    
                 </ul>
             </div>
