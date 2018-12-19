@@ -25,7 +25,7 @@
     @if(Auth::guard('moderator')->check())
         <a href="/feedback" class="btn btn-primary" role="button">Back</a>
         <h1>{{$post[0]->title}}</h1>
-        <h3><a href="/profile/{{$post[0]->user_id}}">Move to Creator's Profile</a></h3>
+        
         <div>
             {!!$post[0]->body!!}
         </div>

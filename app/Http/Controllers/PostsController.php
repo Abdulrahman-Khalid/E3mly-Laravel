@@ -22,18 +22,21 @@ class PostsController extends Controller
         //From Evram:
             //awl wa7d bs ely bya5od authentication
             //$this->middleware('auth'); //redirect to login page if not logged in 
-           // $this->middleware('auth:admin');
+            //$this->middleware('auth:admin');
             //$this->middleware('auth:moderator');
     }
 
     public function index()
     {
-       
-            $posts = CustomDB::getInstance()->get(array("*"),"posts")->order("created_at DESC")->e()->results();
-            return view('posts.index')->with('posts', $posts);
+        if(Auth::guard('web')->check())
+        {
+        $posts = CustomDB::getInstance()->get(array("*"),"posts")->order("created_at DESC")->e()->results();
+        return view('posts.index')->with('posts', $posts);
             //another code
             //$posts = Post::orderBy('created_at', 'desc')->paginate(5);
-
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -43,7 +46,12 @@ class PostsController extends Controller
      */
     public function create()
     {
+       if(Auth::guard('web')->check())
+        { 
         return view('posts.create');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -54,6 +62,8 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        if(Auth::guard('web')->check())
+        {
           //validation
         $this->Validate($request, [
             'title' => 'required',
@@ -134,7 +144,10 @@ class PostsController extends Controller
         $post->category = $request->input('category');
         $post->user_id = Auth::id();
         $post->save();  
-        */      
+        */ 
+        }
+        else     
+            return redirect('/');
 }
 
     /**
@@ -145,10 +158,14 @@ class PostsController extends Controller
      */
     public function show($id)
     {
+        if(Auth::guard('web')->check()||Auth::guard('moderator')->check()||Auth::guard('admin')->check())
+        {
             $sql = CustomDB::getInstance()->get(array("*"), "posts")->where("id = ?",[$id])->e();
             $post = $sql->results();
             return view('posts.show')->with('post', $post);
-                 
+        }
+        else     
+            return redirect('/');       
     }
 
     /**
@@ -182,7 +199,7 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        
+        if(Auth::guard('web')->check()||Auth::guard('moderator')->check()||Auth::guard('admin')->check())
             $id = (int)$id;
             //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
             $check = CustomDB::getInstance()->delete("posts")->where("id = ?", [$id])->e();
@@ -198,6 +215,9 @@ class PostsController extends Controller
             $post = Post::find($id);
             $post->getInstance()->delete();
             */
+        }
+        else
+            return redirect('/');  
     }
        
       

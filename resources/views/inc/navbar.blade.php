@@ -35,9 +35,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/profile">Users</a>
                         </li>
-
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/profile/moderator">Moderators</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/feedback">Feedbacks against Users</a>
+                        </li> 
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/admin">Show Statistics</a>
                         </li>                                             
                     @endif 
                     

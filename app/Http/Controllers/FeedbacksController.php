@@ -18,11 +18,7 @@ class FeedbacksController extends Controller
      */
 
     public function __construct()
-    {
-        //$this->middleware('auth:admin');
-        //$this->middleware('auth')->except('index');
-        
-        //redirect to login page if not logged in 
+    { 
     }
 
     public function index()
@@ -41,7 +37,7 @@ class FeedbacksController extends Controller
            { 
                 //$feedbacks = CustomDB::getInstance()->get(array("*"),"feedbacks")->order("created_at DESC")->e()->results();
                 $feedbacks = CustomDB::getInstance()->get(array('*'), "feedbacks")->where("user_id is null")->order("created_at DESC")->e()->results();
-                return  view('feedback.index2')->with('feedbacks', $feedbacks);
+                return  view('feedback.index')->with('feedbacks', $feedbacks);
             }       
         
            return redirect('/');
@@ -127,9 +123,7 @@ class FeedbacksController extends Controller
     }
     else 
          return redirect('/');  
-
-
-    }
+ }
 
     /**
      * Display the specified resource.

@@ -25,37 +25,19 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-12">
                             <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="Posts-tab" data-toggle="tab" href="#Posts" role="tab" aria-controls="Posts" aria-selected="false">Posts</a>
-                                </li>
-                                @if(Auth::guard('moderator')->check())
                                 <li>
-                                 <form method="GET" action="/feedback/create">
-                                    <input type="hidden" name="post_id" value="{{$_GET['post_id']}}"/>
-                                    <input class ="btn btn-warning" type="submit" name="Action" value="Request this user to be Deleted"/>
-                                 </form>
-                                </li>
-                                @endif
-                                @if(Auth::guard('admin')->check())
-                                <li>
-                                    {!! Form::open(['action' => ['ProfileController@destroy', $user->id], 'method' => 'POST']) !!}
+                                    {!! Form::open(['action' => ['ProfileController@destroy2', $user->id], 'method' => 'POST']) !!}
                                     {{Form::hidden('_method','DELETE')}}
-                                    {{Form::submit('Delete that user', ['class'=> 'btn btn-danger'])}}
-                                    {!! Form::close() !!}  
+                                    {{Form::submit('Delete that Moderator', ['class'=> 'btn btn-danger'])}}
+                                    {!! Form::close() !!}   
                                 </li>
-                                <li>    
-                                   {!! Form::open(['action' => ['ProfileController@create'], 'method' => 'GET']) !!}
-                                    {{Form::hidden('user_id',$user->id)}}
-                                    {{Form::submit('Upgrade that user', ['class'=> 'btn btn-info'])}}
-                                    {!! Form::close() !!}
-                                </li>
-                                @endif
                             </ul>
                             <div class="tab-content ml-1" id="myTabContent">
                                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
@@ -91,15 +73,7 @@
                                         </div>
                                     </div>
                                     <hr />
-                                    <div class="row">
-                                        <div class="col-sm-3 col-md-2 col-5">
-                                            <label style="font-weight:bold;">Points</label>
-                                        </div>
-                                        <div class="col-md-8 col-6">
-                                            {{$user->points}}
-                                        </div>
-                                    </div>
-                                    <hr />
+                                    
                                     <div class="row">
                                         <div class="col-sm-3 col-md-2 col-5">
                                             <label style="font-weight:bold;">Bio</label>

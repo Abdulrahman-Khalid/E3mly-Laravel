@@ -19,12 +19,24 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/profile', 'ProfileController@index');
-Route::get('/profile/{id}', 'ProfileController@show');
 
+//shows all user
+Route::get('/profile', 'ProfileController@index');
+//shows all moderators
+Route::get('/profile/moderator', 'ProfileController@index2');
+//show each user
+Route::get('/profile/{id}', 'ProfileController@show');
+//show each modeator
+Route::get('/profile/moderator/{id}', 'ProfileController@show2');
+
+Route::get('/moderator/create', 'ProfileController@create')->middleware('auth:admin');
+Route::post('/moderator/store', 'ProfileController@store')->middleware('auth:admin');
 //Route::get('/profile/{id}', 'ProfileController@show')->name('profile.show');
 //Route::delete('/profile/destroy/{id}', 'ProfileController@destroy')->middleware('auth:admin');
+//delete a user
 Route::delete('{id}', 'ProfileController@destroy')->middleware('auth:admin');
+//delete a moderator
+Route::delete('/moderator/{id}', 'ProfileController@destroy2')->middleware('auth:admin');
 
 Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 

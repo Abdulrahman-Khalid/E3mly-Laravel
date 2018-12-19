@@ -5,7 +5,11 @@
         @foreach($posts as $post)
             <div class="well well-lg">
                 <h2><a href="/posts/{{$post->id}}">{{$post->title}}</a></h2>
-                <h5>Created By: <a href="/profile/{{$post->user_id}}">{{$post->user_name}}</a></h5>
+                <form method="GET" action="/profile/{{$post->id}}">                 
+                    <input type="hidden" name="post_id" value="{{$post->id}}"/>
+                    <input class ="btn btn-info" type="submit" name="Action" value="Show User"/>
+                </form>
+
                 <small>posted at {{$post->created_at}}</small>
             </div>
         @endforeach
