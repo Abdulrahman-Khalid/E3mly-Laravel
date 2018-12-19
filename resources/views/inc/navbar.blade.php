@@ -23,12 +23,14 @@
                     @if(Auth::guard('moderator')->check())
                     
                     <li class="nav-item">
+
                         <a class="nav-link text-white" href="/feedback">Feedbacks against Posts</a>
                     </li> 
 
                     <li class="nav-item">
                             <a class="nav-link text-white" href="/moderator">All Posts</a>
                     </li>
+
                     @endif
 
                     @if(Auth::guard('admin')->check())

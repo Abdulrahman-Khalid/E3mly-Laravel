@@ -2,6 +2,7 @@
 
 @section('content')
 
+
     @if(Auth::guard('web')->check())
         <a href="/posts" class="btn btn-primary" role="button">Back</a>
         <h1>{{$post[0]->title}}</h1>

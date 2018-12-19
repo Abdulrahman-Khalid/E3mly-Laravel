@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use DB ;
 use Carbon\Carbon;
 Use App\Helpers\DB\CustomDB;
-use App\feedback;
+
 
 class FeedbacksController extends Controller
 {
@@ -18,11 +18,13 @@ class FeedbacksController extends Controller
      */
 
     public function __construct()
-    { 
+
+    {
     }
 
     public function index()
     {
+
         //Only admins and moderators has the right to access the feedback
         //so, when a user attempts to access it, he gets redirected to the home page
         if(Auth::guard('moderator')->check())
@@ -40,8 +42,12 @@ class FeedbacksController extends Controller
                 return  view('feedback.index')->with('feedbacks', $feedbacks);
             }       
         
-           return redirect('/');
+           else
+             return redirect('/');
        
+
+       
+
     }
 
     /**
@@ -49,8 +55,9 @@ class FeedbacksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
+
        // die();
        //$id = $request->input('id');   
        // $id = $_GET['post_id'];
@@ -60,6 +67,7 @@ class FeedbacksController extends Controller
        else
          return redirect('/');  
       
+
     }
 
     /**
@@ -71,14 +79,16 @@ class FeedbacksController extends Controller
     public function store(Request $request)
     {
 
+
     if(Auth::guard('moderator')->check()||Auth::guard('web')->check())
       {
         //I need the post_id and user_id from its relation
         //first , i need post_id from as a POST method
+
+
         $this->Validate($request, [
             'name' => 'required',
             'body' => 'required'
-        ]);
 
         $created_at = Carbon::now()->toDateTimeString();  
         $title = $request->input('name');
@@ -112,10 +122,12 @@ class FeedbacksController extends Controller
             ))->e();
         }
       
-        
+  
 /*
         DB::insert('insert into feedbacks (type,body,user_id,created_at) values (?,?,?,?)', [$title,$body,$user_id,$created_at]);
 */
+
+
         if($check) {
             return redirect('/')->with('success', 'Feedback submitted');
         }
@@ -133,6 +145,7 @@ class FeedbacksController extends Controller
      */
     public function show($id)
     {
+
         if(Auth::guard('admin')->check()||Auth::guard('moderator')->check())
           {
             //$sql = CustomDB::getInstance()->get(array("*"), "feedbacks")->where("id = ?",[$id])->e();
@@ -150,6 +163,8 @@ class FeedbacksController extends Controller
        else
          return redirect('/');  
         
+
+
     }
 
     /**
