@@ -32,7 +32,16 @@
                                     <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="Posts-tab" data-toggle="tab" href="#Posts" role="tab" aria-controls="Posts" aria-selected="false">My Posts</a>
+                                    <a class="nav-link" id="Posts-tab" data-toggle="tab" href="#Posts" role="tab" aria-controls="Posts" aria-selected="false">Posts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="receivedProposals-tab" data-toggle="tab" href="#receivedProposals" role="tab" aria-controls="receivedProposals" aria-selected="false">Received Proposals</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="sentProposals-tab" data-toggle="tab" href="#sentProposals" role="tab" aria-controls="sentProposals" aria-selected="false">Sent Proposals</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="Projects-tab" data-toggle="tab" href="#Projects" role="tab" aria-controls="Projects" aria-selected="false">Projects</a>
                                 </li>
                             </ul>
                             <div class="tab-content ml-1" id="myTabContent">
@@ -87,9 +96,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="Posts" role="tabpanel" aria-labelledby="Posts-tab">
-                                    <h1>Please select a post to view its proposals</h1>
+                                <div class="tab-pane fade" id="receivedProposals" role="tabpanel" aria-labelledby="receivedProposals-tab">
                                     @if(count($userPosts) > 0)
+                                    <h1>Select a post to view its proposals</h1>
                                         @foreach($userPosts as $userPost)
                                         <div class="well well-lg">
                                             <h3><a href="/proposals/{{$userPost->id}}">{{$userPost->title}}</a></h3>
@@ -97,7 +106,54 @@
                                         </div>
                                         @endforeach
                                     @else
-                                    <p>You haven't posted anything, yet</p>
+                                    <p>You haven't posted anything yet</p>
+                                    @endif
+                                </div>
+                                <div class="tab-pane fade" id="Projects" role="tabpanel" aria-labelledby="Projects-tab">
+                                @if(count($userProjects) > 0)
+                                    @foreach($userProjects as $userProject)
+                                    <div class="well well-lg">
+                                        <h3><a href="/projects/{{$userProject->id}}">{{$userProject->title}}</a></h3>
+                                        <strong>{{$userProject->category}}</strong>
+                                        @if($userProject->status == 2)
+                                        <div>Status: <span style="color: brown;">Finished</span></div>
+                                        @endif
+                                        @if($userProject->status == 1)
+                                        <div>Status: <span style="color: violet;">Pending</span></div>
+                                        @endif
+                                        @if($userProject->status == 0)
+                                        <div style="font-style: italic;">Status: <span style="color: green;">In progress</span></div>
+                                        @endif
+                                        <small>project initiated on {{$userProject->created_at}}</small>
+                                    </div>
+                                    @endforeach
+                                    @else
+                                    <p>You haven't initiated any project yet</p>
+                                    @endif
+                                </div>
+                                <div class="tab-pane fade" id="sentProposals" role="tabpanel" aria-labelledby="sentProposals-tab">
+                                    @if(count($sentProposals) > 0)
+                                    <h1>Select a proposal to edit</h1>
+                                        @foreach($sentProposals as $sentProposal)
+                                        <div class="well well-lg">
+                                            <h3><a href="/proposals/{{$sentProposal->id}}/edit">{{$sentProposal->title}}</a></h3>
+                                            <small>proposal sent at {{$sentProposal->created_at}}</small>
+                                        </div>
+                                        @endforeach
+                                    @else
+                                    <p>You haven't sent any proposal yet</p>
+                                    @endif
+                                </div>
+                                <div class="tab-pane fade" id="Posts" role="tabpanel" aria-labelledby="Posts-tab">
+                                    @if(count($userPosts) > 0)
+                                        @foreach($userPosts as $userPost)
+                                        <div class="well well-lg">
+                                            <h3><a href="/posts/{{$userPost->id}}">{{$userPost->title}}</a></h3>
+                                            <small>post created at {{$userPost->created_at}}</small>
+                                        </div>
+                                        @endforeach
+                                    @else
+                                    <p>You haven't posted anything yet</p>
                                     @endif
                                 </div>
                             </div>

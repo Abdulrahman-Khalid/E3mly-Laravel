@@ -24,7 +24,7 @@
                     
                     <li class="nav-item">
 
-                        <a class="nav-link text-white" href="/feedback">Feedbacks against Posts</a>
+                        <a class="nav-link text-white" href="/feedback">Feedbacks Against Posts</a>
                     </li> 
 
                     <li class="nav-item">
@@ -41,7 +41,7 @@
                             <a class="nav-link text-white" href="/profile/moderator">Moderators</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/feedback">Feedbacks against Users</a>
+                            <a class="nav-link text-white" href="/feedback">Feedbacks Against Users</a>
                         </li> 
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/admin">Show Statistics</a>
@@ -50,10 +50,10 @@
                     
                     @if(Auth::guard('web')->check())    
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/posts">view posts</a>
+                            <a class="nav-link text-white" href="/posts">View posts</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/posts/create">create project</a>
+                            <a class="nav-link text-white" href="/posts/create">Create project</a>
                         </li>
                     @endif   
                     

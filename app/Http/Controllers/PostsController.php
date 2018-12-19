@@ -87,6 +87,7 @@ class PostsController extends Controller
             if($extension == 'pdf')
             {
                 $fileNameToStore = $fileName.'_'.time().'.'.$extension;
+                $fileNameToStore = urlencode($fileNameToStore);
                 //upload file
                 $path = $file->storeAs('public/ProjectDescriptions', $fileNameToStore);
             }
@@ -162,7 +163,10 @@ class PostsController extends Controller
         {
             $sql = CustomDB::getInstance()->get(array("*"), "posts")->where("id = ?",[$id])->e();
             $post = $sql->results();
-            return view('posts.show')->with('post', $post);
+            $user_id = Auth::id();
+            $alreadyProposed = CustomDB::getInstance()->query("SELECT count(*) as count FROM proposals WHERE user_id = ? and post_id = ?",[$user_id, $id])->results();
+            $alreadyProposed = $alreadyProposed[0]->count;
+            return view('posts.show')->with('post', $post)->with("user_id",$user_id)->with("alreadyProposed",$alreadyProposed);
         }
         else     
             return redirect('/');       
@@ -176,7 +180,9 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = CustomDB::getInstance()->query("SELECT * FROM posts WHERE id = ?",[$id])->results();
+        $post = $post[0];
+        return view('posts.edit')->with('post',$post);
     }
 
     /**
@@ -188,7 +194,29 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //validation
+        $this->Validate($request, [
+            'title' => 'required',
+            'body' => 'required',
+            'min_cost' => 'required',
+            'max_cost' => 'required',
+            'period' => 'required',
+            'category' => 'required',        
+        ]);
+        
+        $title = $request->input('title');
+        $body = $request->input('body');
+        $min_cost = (int)$request->input('min_cost');
+        $max_cost = (int)$request->input('max_cost');
+        $period = (int)$request->input('period');
+        $category = htmlspecialchars($request->input('category'),ENT_NOQUOTES, 'UTF-8'); //to avoid xxs attacks
+        
+        $check = CustomDB::getInstance()->query("UPDATE posts SET title = ?, body = ?, min_cost = ?, max_cost = ?, period = ?, category = ? WHERE id = ?",[$title,$body,$min_cost,$max_cost,$period,$category,$id])->results();
+
+        //if($check) {
+            return redirect()->route('posts.show', $id)->with('success', 'Post updated successfully');
+        //}
+        //return redirect('/posts')->with('error', 'Post Failed');
     }
 
     /**
