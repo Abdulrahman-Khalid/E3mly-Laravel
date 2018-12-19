@@ -200,6 +200,7 @@ class PostsController extends Controller
     public function destroy($id)
     {
         if(Auth::guard('web')->check()||Auth::guard('moderator')->check()||Auth::guard('admin')->check())
+           {
             $id = (int)$id;
             //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
             $check = CustomDB::getInstance()->delete("posts")->where("id = ?", [$id])->e();
