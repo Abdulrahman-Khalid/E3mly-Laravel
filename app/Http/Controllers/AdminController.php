@@ -58,9 +58,9 @@ class AdminController extends Controller
         $projects1 = $sql4->results();
         $running_projects= $projects1[0]->running_projects;
 
-        $sql4 =  CustomDB::getInstance()->query("SELECT count(*)as bending_projects   FROM (`projects`) WHERE status = 1") ;
+        $sql4 =  CustomDB::getInstance()->query("SELECT count(*)as pending_projects   FROM (`projects`) WHERE status = 1") ;
         $projects2 = $sql4->results();
-        $bending_projects = $projects2[0]->bending_projects;
+        $pending_projects = $projects2[0]->pending_projects;
 
         $sql5 =  CustomDB::getInstance()->query("SELECT count(*)as finished_projects   FROM (`projects`) WHERE status = 2") ;
         $projects3 = $sql5->results();
@@ -72,7 +72,7 @@ class AdminController extends Controller
                       "mod_count"=>$mod_count, 
                       "feeds"=>$feeds,
                       "running_projects"=>$running_projects,
-                      "bending_projects"=>$bending_projects,
+                      "pending_projects"=>$pending_projects,
                       "finished_projects"=>$finished_projects  );
 
         return view('admin')->with('counts',$counts);

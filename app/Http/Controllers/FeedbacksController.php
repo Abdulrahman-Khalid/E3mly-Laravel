@@ -89,8 +89,8 @@ class FeedbacksController extends Controller
         $this->Validate($request, [
             'name' => 'required',
             'body' => 'required'
-
-        $created_at = Carbon::now()->toDateTimeString();  
+        ]);
+        $created_at = Carbon::now('Africa/Cairo')->toDateTimeString();  
         $title = $request->input('name');
         $body = $request->input('body'); 
         $post_id = $_POST['post_id'];

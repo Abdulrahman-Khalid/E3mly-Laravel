@@ -37,8 +37,8 @@
 
     <tr class="bg-secondary">
       <th scope="row">E</th>
-      <td>Bending Projects</td>
-      <td>{{$counts['bending_projects']}}</td>
+      <td>Pending Projects</td>
+      <td>{{$counts['pending_projects']}}</td>
     </tr>
 
     <tr class="bg-success">

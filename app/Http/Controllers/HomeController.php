@@ -9,7 +9,6 @@ use DB ;
 use Carbon\Carbon;
 Use App\Helpers\DB\CustomDB;
 use App\User;
-=
 class HomeController extends Controller
 {
     /**
