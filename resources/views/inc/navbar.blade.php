@@ -20,30 +20,44 @@
                     -->
                     
                   
-                    @if(Auth::guard('admin')->check()||Auth::guard('moderator')->check())
+                    @if(Auth::guard('moderator')->check())
                     
-                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/feedback">Feedbacks only for admins</a>
-                    </li>   
-                    
+                    <li class="nav-item">
 
-                    @else
-                    @auth
+                        <a class="nav-link text-white" href="/feedback">Feedbacks against Posts</a>
+                    </li> 
 
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts/create">Create project</a>
+                            <a class="nav-link text-white" href="/moderator">All Posts</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts">View posts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/feedback/create">Create feedback</a>
-                    </li>
-                    
-                    
-                    @endauth
 
                     @endif
+
+                    @if(Auth::guard('admin')->check())
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/profile">Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/profile/moderator">Moderators</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/feedback">Feedbacks against Users</a>
+                        </li> 
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/admin">Show Statistics</a>
+                        </li>                                             
+                    @endif 
+                    
+                    @if(Auth::guard('web')->check())    
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/posts">view posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/posts/create">create project</a>
+                        </li>
+                    @endif   
+                    
+                   
                 </ul>
             </div>
             <!-- Right Side Of Navbar -->
