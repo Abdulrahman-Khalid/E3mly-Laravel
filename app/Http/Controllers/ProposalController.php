@@ -28,7 +28,8 @@ class ProposalController extends Controller
         $user = Auth::user();
         $user_id = Auth::id();
         $posts = CustomDB::getInstance()->query("SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC",[$user_id])->results();
-        return view('home')->with('user', $user)->with('userPosts', $posts);
+        $projects = CustomDB::getInstance()->query("SELECT * FROM projects WHERE customer_id = ? OR craftman_id = ?",[$user_id,$user_id])->results();
+        return view('home')->with('user', $user)->with('userPosts', $posts)->with('userProjects',$projects);
     }
 
     /**
@@ -68,6 +69,7 @@ class ProposalController extends Controller
             if($extension == 'pdf')
             {
                 $fileNameToStore = $fileName.'_'.time().'.'.$extension;
+                $fileNameToStore = urlencode($fileNameToStore);
                 //upload file
                 $path = $file->storeAs('public/ProjectDescriptions', $fileNameToStore);
             }
@@ -84,7 +86,7 @@ class ProposalController extends Controller
         $cost = (int)$request->input('cost');
         $user_id = Auth::id();
         $post_id = $_POST['post_id'];
-        $created_at = Carbon::now()->toDateTimeString();
+        $created_at = Carbon::now('Africa/Cairo')->toDateTimeString();
         
         
         $check = CustomDB::getInstance()->insert("proposals", array(
@@ -112,9 +114,8 @@ class ProposalController extends Controller
     public function show($id)
     {
         $user_id = Auth::id();
-        $sql = CustomDB::getInstance()->query("SELECT title, name, proposals.body as body, proposals.created_at as created_at, proposals.id as id, cost FROM `proposals`,`posts`,`users` WHERE posts.id = ? and post_id = posts.id and posts.user_id = ? and proposals.user_id = users.id ORDER BY proposals.created_at DESC",[$id, $user_id]);
+        $sql = CustomDB::getInstance()->query("SELECT title, name, proposals.body as body, proposals.created_at as created_at, proposals.id as id, cost, details_file FROM `proposals`,`posts`,`users` WHERE posts.id = ? and post_id = posts.id and posts.user_id = ? and proposals.user_id = users.id ORDER BY proposals.created_at DESC",[$id, $user_id]);
         $proposals = $sql->results();
-
         return view('proposals.show')->with('proposals', $proposals);
     }
 
@@ -126,7 +127,9 @@ class ProposalController extends Controller
      */
     public function edit($id)
     {
-        //
+        $proposal = CustomDB::getInstance()->query("SELECT * FROM proposals WHERE id = ?",[$id])->results();
+        $proposal = $proposal[0];
+        return view('proposals.edit')->with('proposal',$proposal);
     }
 
     /**
@@ -138,7 +141,16 @@ class ProposalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //validation
+        $this->Validate($request, [
+            'body' => 'required',
+            'cost' => 'required',        
+        ]);
+        $body = $request->input('body');
+        $cost = (int)$request->input('cost');
+
+        $check = CustomDB::getInstance()->query("UPDATE proposals SET body = ?, cost = ? WHERE id = ? ",[$body, $cost, $id])->results();
+        return redirect('/home')->with('success', 'Proposal updated successfully');        
     }
 
     /**
@@ -150,15 +162,12 @@ class ProposalController extends Controller
     public function destroy($id)
     {
        $id = (int)$id;
-        //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
        $post_id = CustomDB::getInstance()->query("SELECT posts.id as id from posts, proposals where posts.id = post_id and proposals.id = ?", [$id])->results();
         $check = CustomDB::getInstance()->delete("proposals")->where("id = ?", [$id])->e();
         var_dump($post_id);
         if($check) {
             return back()->with('success', 'Proposal declined successfully');
-            //return redirect('/proposals/'. $post_id .'/')->with('success', 'Proposal declined successfully');
         } 
             return back()->with('error', 'Failed to decline proposal');
-        //return redirect('/proposals/'. $post_id.'/')->with('error', 'Failed to decline proposal');
     }
 }

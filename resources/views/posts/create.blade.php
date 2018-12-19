@@ -33,7 +33,7 @@
                     <i class="fas fa-file-pdf fa-lg" style ="margin:5px;"></i>
                     <span id="label_span">Upload Description File</span>
                 </label>
-            </div>
+        </div>
         {{Form::submit('Submit', ['class'=> 'btn btn-success btn-lg', 'style' => 'margin-bottom:30px; text-align:center; height:3em; width:11em;'])}}
     {!! Form::close() !!}
 @endsection

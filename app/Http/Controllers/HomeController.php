@@ -30,7 +30,9 @@ class HomeController extends Controller
         $user = Auth::user();
         $user_id = Auth::id();
         $posts = CustomDB::getInstance()->query("SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC",[$user_id])->results();
-        return view('home')->with('user', $user)->with('userPosts', $posts);
+        $projects = CustomDB::getInstance()->query("SELECT * FROM projects WHERE customer_id = ? OR craftman_id = ?",[$user_id,$user_id])->results();
+        $sentProposals = CustomDB::getInstance()->query("SELECT proposals.id as id, title, proposals.created_at as created_at FROM proposals, posts WHERE proposals.user_id = ? and posts.id = proposals.post_id ORDER BY proposals.created_at DESC",[$user_id])->results();
+        return view('home')->with('user', $user)->with('userPosts', $posts)->with('userProjects',$projects)->with('sentProposals',$sentProposals);
     }
 
     

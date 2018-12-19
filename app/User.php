@@ -31,7 +31,11 @@ class User extends Authenticatable
     public function posts(){
         $this->hasMany('App\Post');
     }
-    public function proposal(){
-        $this->hasMany('App\proposal');
+    public function proposals(){
+        $this->hasMany('App\Proposal');
+    }
+
+    public function projects(){
+        $this->hasMany('App\Project');
     }
 }

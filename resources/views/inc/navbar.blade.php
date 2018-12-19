@@ -31,13 +31,13 @@
                     @auth
 
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts/create">Create project</a>
+                        <a class="nav-link text-white" href="/posts/create">Create A Post</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts">View posts</a>
+                        <a class="nav-link text-white" href="/posts">View Posts</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/feedback/create">Create feedback</a>
+                        <a class="nav-link text-white" href="/feedback/create">Create A Feedback</a>
                     </li>
                     
                     
