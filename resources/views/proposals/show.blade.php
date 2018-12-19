@@ -37,12 +37,7 @@
                         </div>
                         @endif
                         
-                        <div class="col-md-auto">
-                            {!! Form::open(['action' => ['FeedbacksController@create',$proposal->id], 'method' => 'GET']) !!}
-                            {{Form::hidden('_method','POST')}}
-                            {{Form::submit('Report', ['class'=> 'btn btn-warning'])}}
-                            {!! Form::close() !!} 
-                        </div>
+                        
                     </div>
                 </div>
             </div>
