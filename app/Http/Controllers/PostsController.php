@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Post; //for using model functions
 use Carbon\Carbon;
-use DB;
 Use App\Helpers\DB\CustomDB;
 
 class PostsController extends Controller
