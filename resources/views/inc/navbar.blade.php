@@ -14,14 +14,50 @@
             </ul>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
-                    @auth
+                    <!--
+                    show feedback for both mod. and admins
+                    
+                    -->
+                    
+                  
+                    @if(Auth::guard('moderator')->check())
+                    
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts">view posts</a>
-                    </li>
+
+                        <a class="nav-link text-white" href="/feedback">Feedbacks Against Posts</a>
+                    </li> 
+
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/posts/create">create project</a>
+                            <a class="nav-link text-white" href="/moderator">All Posts</a>
                     </li>
-                    @endauth
+
+                    @endif
+
+                    @if(Auth::guard('admin')->check())
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/profile">Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/profile/moderator">Moderators</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/feedback">Feedbacks Against Users</a>
+                        </li> 
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/admin">Show Statistics</a>
+                        </li>                                             
+                    @endif 
+                    
+                    @if(Auth::guard('web')->check())    
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/posts">View posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/posts/create">Create project</a>
+                        </li>
+                    @endif   
+                    
+                   
                 </ul>
             </div>
             <!-- Right Side Of Navbar -->

@@ -18,15 +18,24 @@ class PostsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth'); //redirect to login page if not logged in 
+        //From Evram:
+            //awl wa7d bs ely bya5od authentication
+            //$this->middleware('auth'); //redirect to login page if not logged in 
+            //$this->middleware('auth:admin');
+            //$this->middleware('auth:moderator');
     }
 
     public function index()
     {
+        if(Auth::guard('web')->check())
+        {
         $posts = CustomDB::getInstance()->get(array("*"),"posts")->order("created_at DESC")->e()->results();
         return view('posts.index')->with('posts', $posts);
-        //another code
-        //$posts = Post::orderBy('created_at', 'desc')->paginate(5);
+            //another code
+            //$posts = Post::orderBy('created_at', 'desc')->paginate(5);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -36,7 +45,12 @@ class PostsController extends Controller
      */
     public function create()
     {
+       if(Auth::guard('web')->check())
+        { 
         return view('posts.create');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -47,7 +61,9 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //validation
+        if(Auth::guard('web')->check())
+        {
+          //validation
         $this->Validate($request, [
             'title' => 'required',
             'body' => 'required',
@@ -70,6 +86,7 @@ class PostsController extends Controller
             if($extension == 'pdf')
             {
                 $fileNameToStore = $fileName.'_'.time().'.'.$extension;
+                $fileNameToStore = urlencode($fileNameToStore);
                 //upload file
                 $path = $file->storeAs('public/ProjectDescriptions', $fileNameToStore);
             }
@@ -127,8 +144,11 @@ class PostsController extends Controller
         $post->category = $request->input('category');
         $post->user_id = Auth::id();
         $post->save();  
-        */
-    }
+        */ 
+        }
+        else     
+            return redirect('/');
+}
 
     /**
      * Display the specified resource.
@@ -138,11 +158,17 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $sql = CustomDB::getInstance()->get(array("*"), "posts")->where("id = ?",[$id])->e();
-        $post = $sql->results();
-        return view('posts.show')->with('post', $post);
-        //another code
-        //$post = Post::find($id);
+        if(Auth::guard('web')->check()||Auth::guard('moderator')->check()||Auth::guard('admin')->check())
+        {
+            $sql = CustomDB::getInstance()->get(array("*"), "posts")->where("id = ?",[$id])->e();
+            $post = $sql->results();
+            $user_id = Auth::id();
+            $alreadyProposed = CustomDB::getInstance()->query("SELECT count(*) as count FROM proposals WHERE user_id = ? and post_id = ?",[$user_id, $id])->results();
+            $alreadyProposed = $alreadyProposed[0]->count;
+            return view('posts.show')->with('post', $post)->with("user_id",$user_id)->with("alreadyProposed",$alreadyProposed);
+        }
+        else     
+            return redirect('/');       
     }
 
     /**
@@ -153,7 +179,9 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = CustomDB::getInstance()->query("SELECT * FROM posts WHERE id = ?",[$id])->results();
+        $post = $post[0];
+        return view('posts.edit')->with('post',$post);
     }
 
     /**
@@ -165,7 +193,29 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //validation
+        $this->Validate($request, [
+            'title' => 'required',
+            'body' => 'required',
+            'min_cost' => 'required',
+            'max_cost' => 'required',
+            'period' => 'required',
+            'category' => 'required',        
+        ]);
+        
+        $title = $request->input('title');
+        $body = $request->input('body');
+        $min_cost = (int)$request->input('min_cost');
+        $max_cost = (int)$request->input('max_cost');
+        $period = (int)$request->input('period');
+        $category = htmlspecialchars($request->input('category'),ENT_NOQUOTES, 'UTF-8'); //to avoid xxs attacks
+        
+        $check = CustomDB::getInstance()->query("UPDATE posts SET title = ?, body = ?, min_cost = ?, max_cost = ?, period = ?, category = ? WHERE id = ?",[$title,$body,$min_cost,$max_cost,$period,$category,$id])->results();
+
+        //if($check) {
+            return redirect()->route('posts.show', $id)->with('success', 'Post updated successfully');
+        //}
+        //return redirect('/posts')->with('error', 'Post Failed');
     }
 
     /**
@@ -176,17 +226,28 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        $id = (int)$id;
-        //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
-        $check = CustomDB::getInstance()->delete("posts")->where("id = ?", [$id])->e();
-        if($check) {
-            return redirect('/posts')->with('success', 'Post Removed');
-        } 
-        return redirect('/posts')->with('error', 'Post Not Removed');
-        //another code
-        /*
-        $post = Post::find($id);
-        $post->getInstance()->delete();
-        */
+        if(Auth::guard('web')->check()||Auth::guard('moderator')->check()||Auth::guard('admin')->check())
+           {
+            $id = (int)$id;
+            //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
+            $check = CustomDB::getInstance()->delete("posts")->where("id = ?", [$id])->e();
+            if($check)
+            {
+                //Evram: I change the redirecting path, 34an lma ymsa7 feedback
+                return redirect('/')->with('success', 'Post Removed');
+            } 
+            else
+                return redirect('/')->with('error', 'Post Not Removed');
+            //another code
+            /*
+            $post = Post::find($id);
+            $post->getInstance()->delete();
+            */
+        }
+        else
+            return redirect('/');  
     }
+       
+      
+    
 }

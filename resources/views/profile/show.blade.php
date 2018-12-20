@@ -9,10 +9,11 @@
                 <div class="card-body">
                     <div class="card-title mb-4">
                         <div class="d-flex justify-content-start">
+                            
                             <div class="image-container">
                                 <img src="http://placehold.it/150x150" id="imgProfile" style="width: 150px; height: 150px" class="img-thumbnail" />
                                 <div class="middle">
-                                    <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Change" />
+                                    <input type="button" disabled class="btn btn-secondary" id="btnChangePicture" value="Change" />
                                     <input type="file" style="display: none;" id="profilePicture" name="file" />
                                 </div>
                             </div>
@@ -24,7 +25,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-12">
                             <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
@@ -43,6 +43,29 @@
                                 <li class="nav-item">
                                     <a class="nav-link" id="Projects-tab" data-toggle="tab" href="#Projects" role="tab" aria-controls="Projects" aria-selected="false">Projects</a>
                                 </li>
+                            
+                                @if(Auth::guard('moderator')->check())
+                                <li>
+                                 <form method="GET" action="/feedback/create">
+                                    <input type="hidden" name="post_id" value="{{$_GET['post_id']}}"/>
+                                    <input class ="btn btn-warning" type="submit" name="Action" value="Request this user to be Deleted"/>
+                                 </form>
+                                </li>
+                                @endif
+                                @if(Auth::guard('admin')->check())
+                                <li>
+                                    {!! Form::open(['action' => ['ProfileController@destroy', $user->id], 'method' => 'POST']) !!}
+                                    {{Form::hidden('_method','DELETE')}}
+                                    {{Form::submit('Delete that user', ['class'=> 'btn btn-danger'])}}
+                                    {!! Form::close() !!}  
+                                </li>
+                                <li>    
+                                   {!! Form::open(['action' => ['ProfileController@create'], 'method' => 'GET']) !!}
+                                    {{Form::hidden('user_id',$user->id)}}
+                                    {{Form::submit('Upgrade that user', ['class'=> 'btn btn-info'])}}
+                                    {!! Form::close() !!}
+                                </li>
+                                @endif
                             </ul>
                             <div class="tab-content ml-1" id="myTabContent">
                                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
@@ -155,6 +178,9 @@
                                     @else
                                     <p>You haven't posted anything yet</p>
                                     @endif
+                                </div>
+                                <div class="tab-pane fade" id="Posts" role="tabpanel" aria-labelledby="Posts-tab">
+                                    
                                 </div>
                             </div>
                         </div>

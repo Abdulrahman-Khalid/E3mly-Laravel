@@ -34,4 +34,11 @@ class User extends Authenticatable
     public function messages(){
         $this->hasMany('App\Message');
     }
+    public function proposals(){
+        $this->hasMany('App\Proposal');
+    }
+
+    public function projects(){
+        $this->hasMany('App\Project');
+    }
 }

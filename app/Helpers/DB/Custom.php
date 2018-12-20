@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Helpers\DB;
 use PDO;
-
 class CustomDB {
     private static $_instance = null; //store instance of the database if it is available
     private $_pdo,
@@ -23,14 +21,12 @@ class CustomDB {
             die($ex->getMessage());
         }
     }
-
     public static function getInstance() { // to connect once to the database
         if(!isset(self::$_instance)) {
             self::$_instance = new CustomDB();
         }
         return self::$_instance;
     }
-
     //execute regular queries and can bind ? with values
     public function query($sql, $paramters = array()) {
         $this->_error = false;
@@ -53,7 +49,6 @@ class CustomDB {
         $this->_bindValues = array();
         return $this; // to chain it as query_name->error()
     }
-
     // getters
     public function error() { //return true if there is an error in the query
         return $this->_error;
@@ -92,7 +87,6 @@ class CustomDB {
         $this->_query = "{$action} {$str} FROM {$table}";
         return;
     }
-
     public function get($cols, $table) { 
         $this->action('SELECT', $cols, $table);
         return $this;
@@ -107,13 +101,13 @@ class CustomDB {
             $keys = array_keys($cols);
             $this->_bindValues += array_values($cols);
             $quesMArk = '(';
-			$counter = 1;
-			foreach ($cols as $cols) {
-				$quesMArk .= '?';
-				if ($counter < $itemNum) {
-					$quesMArk .= ', '; 
-				}
-				$counter++;
+            $counter = 1;
+            foreach ($cols as $cols) {
+                $quesMArk .= '?';
+                if ($counter < $itemNum) {
+                    $quesMArk .= ', '; 
+                }
+                $counter++;
             }
             $quesMArk .= ')';
             $this->_query = "INSERT INTO {$table} (`" . implode('`, `', $keys) . "`) VALUES {$quesMArk}";
