@@ -72,7 +72,7 @@
                        
                         <div class="form-group row mb-0">
 
-                             <input type="hidden" name="user_id" value="{{$user->id}}"/>
+                            <input type="hidden" name="user_id" value="{{$user->id}}"/>
                             
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

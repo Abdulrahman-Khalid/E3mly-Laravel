@@ -237,7 +237,9 @@ class PostsController extends Controller
                 return redirect('/')->with('success', 'Post Removed');
             } 
             else
+            {
                 return redirect('/')->with('error', 'Post Not Removed');
+            }
             //another code
             /*
             $post = Post::find($id);

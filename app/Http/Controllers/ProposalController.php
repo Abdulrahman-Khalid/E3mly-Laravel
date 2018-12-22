@@ -95,10 +95,26 @@ class ProposalController extends Controller
             'body' => $body,
             'cost' => $cost,
             'details_file' => $fileNameToStore,
-            'created_at' => $created_at
+            'created_at' => $created_at,
         ))->e();
-
         if($check) {
+            //for notifications
+            //$result = CustomDB::getInstance()->get(["max(id) as id"], "proposals")->e()->first();
+            //$last_id = (int)$result->id;
+
+            //get the user id of the one who posted the post
+            $result = CustomDB::getInstance()->get(["user_id"], "posts")->where("id = ?", [$post_id])->e()->first();
+            $user_id_post = $result->user_id;
+            
+            //notifications
+            //type 1 is proposal is sent
+            CustomDB::getInstance()->insert("notifications", array(
+                'user_id' => $user_id_post,
+                'post_id' => $post_id,
+                'type' => 1,
+                'created_at' => $created_at,
+            ))->e();
+
             return redirect('/posts')->with('success', 'Proposal Sent');
         }
         return redirect('/posts')->with('error', 'Proposal not created successfully');

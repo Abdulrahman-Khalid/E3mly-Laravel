@@ -56,6 +56,9 @@ class CustomDB {
     public function results() { 
         return $this->_results;
     }
+    public function first() { 
+        return $this->_results[0];
+    }
     public function count() {
         return $this->_count;
     }  

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-laravel bg-primary" style="margin-bottom:10px;">
     <div class="container">
-        <a class="navbar-brand text-white" href="{{ url('/') }}">
+        <a class="navbar-brand text-white" href="{{ url('/home') }}">
             {{ config('app.name', 'E3mly') }}
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -45,6 +45,9 @@
                         </li> 
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/admin">Show Statistics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/adminEvent">Update Your Event</a>
                         </li>                                             
                     @endif 
                     
@@ -73,12 +76,10 @@
                         @endif
                     </li>
                 @else
-                    <li class="na-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            <span class="fa fa-globe-africa"style="margin-right:5px;"></span>Notifications <span class="badge badge-danger">2<span>
-                        </a>     
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/notifications"><span class="fa fa-globe-africa"style="margin-right:5px;"></span>Notifications</a>    
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class ="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }} <span class="caret"></span>
                         </a>

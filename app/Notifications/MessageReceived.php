@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class proposalReceived extends Notification
+class MessageReceived extends Notification
 {
     use Queueable;
 
@@ -41,16 +41,15 @@ class proposalReceived extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            
+            //
         ];
     }
-
     /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
+    * Get the array representation of the notification.
+    *
+    * @param  mixed  $notifiable
+    * @return array
+    */
     public function toArray($notifiable)
     {
         return [

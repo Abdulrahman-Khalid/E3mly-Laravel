@@ -19,11 +19,11 @@ Route::resource('/messages', 'MessagesController');
 Route::resource('/feedback', 'FeedbacksController');
 Route::resource('/proposals', 'ProposalController');
 Route::resource('/projects', 'ProjectsController');
+Route::resource('/notifications', 'NotificationsController');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
 
 //shows all user
 Route::get('/profile', 'ProfileController@index');
@@ -33,6 +33,10 @@ Route::get('/profile/moderator', 'ProfileController@index2');
 Route::get('/profile/{id}', 'ProfileController@show');
 //show each modeator
 Route::get('/profile/moderator/{id}', 'ProfileController@show2');
+
+Route::get('/adminEvent', 'AdminController@event');
+Route::post('/adminEvent/store', 'AdminController@addevent');
+
 
 Route::get('/moderator/create', 'ProfileController@create')->middleware('auth:admin');
 Route::post('/moderator/store', 'ProfileController@store')->middleware('auth:admin');

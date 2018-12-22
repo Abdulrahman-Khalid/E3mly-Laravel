@@ -41,4 +41,8 @@ class User extends Authenticatable
     public function projects(){
         $this->hasMany('App\Project');
     }
+
+    public function notifications(){
+        $this->hasMany('App\Notification');
+    }
 }

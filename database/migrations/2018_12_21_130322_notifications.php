@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMessagesTable extends Migration
+class Notifications extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,17 @@ class CreateMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->mediumtext('body');
             $table->unsignedinteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedinteger('project_id');
+            $table->unsignedinteger('post_id')->nullable();
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+            $table->unsignedinteger('project_id')->nullable();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->string('work_file')->nullable();
-            $table->timestamp('created_at')->nullable();  
+            $table->boolean('read')->default(0);
+            $table->unsignedinteger('type');  //type = 1 proposal received, = 2 porposal is accepted, = 3 message received
+            $table->timestamp('created_at')->nullable(); 
         });
     }
 
@@ -32,6 +34,6 @@ class CreateMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('notifications');
     }
 }

@@ -77,4 +77,51 @@ class AdminController extends Controller
 
         return view('admin')->with('counts',$counts);
     }
+     /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function event()
+    {
+        //here we need admin's id 
+        $admin_id = Auth::guard('admin')->id();
+        $sql =  CustomDB::getInstance()->query("SELECT admins.announcement as adminevent  FROM (`admins`) WHERE id = ?",[$admin_id]) ;
+        $admin_event = $sql->results();
+      //  die (var_dump($admin_event[0]->adminevent));
+        $event = array ("body"=>$admin_event[0]->adminevent,
+                          "id"=>$admin_id);
+       // die (var_dump($event['body']));
+        return view ('adminEvent')->with ('event',$event);
+
+    }
+    
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addevent(Request $request)
+    {
+
+
+    if(Auth::guard('admin')->check())
+      {
+       
+        $event = $request->input('event');
+        $id = $_POST['admin_id'];
+       // die (var_dump($event));
+        
+        //$sql =  CustomDB::getInstance()->query("UPDATE admins SET (`event=?`) WHERE id = ?",[$event,$id]) ;
+        $check = CustomDB::getInstance()->query("UPDATE admins SET admins.announcement = ? WHERE id = ? ",[$event, $id])->results();
+        
+      
+            return redirect('/')->with('success', 'Event updated');
+        
+    }
+    else 
+         return redirect('/');  
+    }
+
 }

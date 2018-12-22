@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Message;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 Use App\Helpers\DB\CustomDB;
-Use App\Helpers\Files\file;
 
 class MessagesController extends Controller
 {
@@ -17,8 +17,7 @@ class MessagesController extends Controller
      */
     public function index()
     {
-        $messages = CustomDB::getInstance()->get(array("*"),"messages")->order("created_at")->e()->results();
-        return view('project.index')->with('messages', $messages);
+        //
     }
 
     /**
@@ -28,7 +27,7 @@ class MessagesController extends Controller
      */
     public function create()
     {
-        return view('project.index');
+        return redirct('/');
     }
 
     /**
@@ -37,28 +36,76 @@ class MessagesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $project_id)
+    public function store(Request $request)
     {
         $this->Validate($request, [
             'body' => 'required',
-            'description_file' => 'nullable|max:1999', //< 2mb as apache doesn't allow         
+            'work_file' => 'nullable|max:1999', //< 2mb as apache doesn't allow         
         ]);
         //Handle File Upload
+        if($request->hasFile('work_file'))
+        {   
+            $file = $request->file('work_file');
+            //get file name with ext
+            $fileNameWithExt = $file->getClientOriginalName();
+            //get just filename
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            //get just ext
+            $extension = $file->guessClientExtension();
+            if($extension == 'pdf')
+            {
+                $fileNameToStore = $fileName.'_'.time().'.'.$extension;
+                $fileNameToStore = urlencode($fileNameToStore);
+                //upload file
+                $path = $file->storeAs('public/MessageDescriptions', $fileNameToStore);
+            }
+            else
+            {
+                $fileNameToStore = 'nofile.pdf';
+            }
+        }
+        else    
+        {
+            $fileNameToStore = 'nofile.pdf';
+        }
+       
         $body = $request->input('body');
         $user_id = Auth::id();
-        $created_at = Carbon::now()->toDateTimeString();
-        $fileNameToStore = file::upload($request->hasFile('description_file'));
+        $project_id = (int)$request->input('project_id');
+        $created_at = Carbon::now('Africa/Cairo')->toDateTimeString();
         $check = CustomDB::getInstance()->insert("messages", array(
             'body' => $body,
             'user_id' => $user_id,
             'project_id' => $project_id,
             'created_at' => $created_at,
-            'description_file' => $fileNameToStore,
+            'work_file' => $fileNameToStore,
         ))->e();
+
         if($check) {
-            return redirect('/messages')->with('success', 'Message Created'); //will change
+            //for notifcations
+            //$result = CustomDB::getInstance()->get(["max(id) as id"],"messages")->e()->first();
+            //$last_id = (int)$result->id;
+            //notifications
+            $result = CustomDB::getInstance()->get(['craftman_id','customer_id'], "projects")->where("id = ?",[$project_id])->e()->first();
+            if((int)$result->customer_id == $user_id)
+            {
+                $result = CustomDB::getInstance()->get(['id'], "users")->where("id = ?",[$result->craftman_id])->e()->first();
+            }
+            else
+            {
+                $result = CustomDB::getInstance()->get(['id'], "users")->where("id = ?",[$result->customer_id])->e()->first();
+            }
+            $userIDToNotify = $result->id;
+            CustomDB::getInstance()->insert("notifications", array(
+                'user_id' => $userIDToNotify,
+                'project_id' => $project_id,
+                'type' => 3,
+                'created_at' => $created_at,
+            ))->e();
+
+            return back()->with('success', 'Message Created'); //will change
         }
-        return redirect('/messages')->with('error', 'Message Failed'); //will change
+        return back()->with('error', 'Message Failed'); //will change
     }
 
     /**
@@ -69,8 +116,8 @@ class MessagesController extends Controller
      */
     public function show($id)
     {
-        $messages = CustomDB::getInstance()->get(array("*"), "messages")->where("id = ?",[$id])->e()->results();
-        return view('message.show')->with('messages', $messages);
+        //$messages = CustomDB::getInstance()->get(array("*"), "messages")->where("id = ?",[$id])->e()->results();
+        //return view('message.show')->with('messages', $messages);
     }
 
     /**
@@ -105,11 +152,11 @@ class MessagesController extends Controller
     public function destroy($id)
     {
         $id = (int)$id;
-        //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
+        //$check = CustomDB::getInstance()->query("DELETE FROM messages WHERE id = ?", [$id]);
         $check = CustomDB::getInstance()->delete("messages")->where("id = ?", [$id])->e();
         if($check) {
-            return redirect('/project')->with('success', 'Message Removed');
+            return back()->with('success', 'Message Removed');
         } 
-        return redirect('/project')->with('error', 'Message Not Removed');
+        return back()->with('error', 'Message Not Removed');
     }
 }

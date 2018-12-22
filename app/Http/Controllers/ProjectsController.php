@@ -16,7 +16,6 @@ class ProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
     public function __construct()
     {
         $this->middleware('auth'); //redirect to login page if not logged in 
@@ -88,6 +87,14 @@ class ProjectsController extends Controller
         $check1 = CustomDB::getInstance()->delete("posts")->where("id = ?", [$post_id_to_be_deleted])->e();
 
         if($check && $check1) {
+            //notification porposal is accepted
+            //type 1 proposal is sent, 2 porposal is accepted, 3 message 
+            CustomDB::getInstance()->insert("notifications", array(
+                'user_id' => $craftman_id,
+                'project_id' => $id,
+                'type' => 2,
+                'created_at' => $created_at,
+            ))->e();
             return redirect()->route('projects.show', $id)->with('success', 'Project Initiated Successfully');
         }
         return redirect()->route('projects.show', $id)->with('error', 'Project Initiation Unsuccessfull');
@@ -105,7 +112,8 @@ class ProjectsController extends Controller
         $projects = CustomDB::getInstance()->query("SELECT * FROM projects WHERE id = ?",[$id])->results();
         $craftman = CustomDB::getInstance()->query("SELECT * FROM users WHERE id = ?",[$projects[0]->craftman_id])->results();
         $customer = CustomDB::getInstance()->query("SELECT * FROM users WHERE id = ?",[$projects[0]->customer_id])->results();
-        return view('projects.show')->with('projects',$projects[0])->with('user_id',$user_id)->with('craftman',$craftman[0])->with('customer',$customer[0]);
+        $messages_users = CustomDB::getInstance()->get(array("messages.*",'users.name'),"messages,users")->where("messages.project_id = ? and messages.user_id = users.id",[$id])->order("messages.created_at")->e()->results();
+        return view('projects.show')->with('project',$projects[0])->with('user_id',$user_id)->with('craftman',$craftman[0])->with('customer',$customer[0])->with('messages_users', $messages_users);
     }
 
     /**
