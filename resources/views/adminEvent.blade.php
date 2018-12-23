@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -8,15 +10,16 @@
                 <div class="card-header">{{ __('Add your Event here') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/adminEvent/store">
                     {!! Form::open(['action' => ['AdminController@addevent'], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}	
                        
+                <div class="input-group mb-3">
 
-                    <div class="form-group">
-                        {{Form::label('body', 'Event')}}
-                       
-                        {{Form::textarea('event',$event["body"], ['id' => 'article-ckeditor', 'class' => 'form-control'])}}
-                    </div>
+                  <input type="text" name="event" class="form-control" placeholder='{{$event["body"]}}' value='{{$event["body"]}}'aria-describedby="basic-addon2">
+                  <div class="input-group-append">
+                   
+                  </div>
+                </div>
+                  
                     <input type="hidden" name="admin_id" value="{{$event['id']}}"/>
 
                             <div class="col-md-6 offset-md-4">
@@ -24,8 +27,9 @@
                                     {{ __('Update') }}
                                 </button>
                             </div>
+                           
                         </div>
-                    </form>
+                   
                 </div>
             </div>
         </div>

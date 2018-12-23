@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use DB ;
 use Carbon\Carbon;
 Use App\Helpers\DB\CustomDB;
-
+use Illuminate\Support\Facades\Hash;
 class AdminController extends Controller
 {
     /**
@@ -37,7 +37,8 @@ class AdminController extends Controller
         $sql =  CustomDB::getInstance()->query("SELECT count(*)as posts_count   FROM (`posts`) ") ;
         $posts = $sql->results();
         $posts_count = $posts[0]->posts_count;
-        
+               
+
         $sql0 =  CustomDB::getInstance()->query("SELECT count(*)as project_count   FROM (`projects`) ") ;
         $projects = $sql0->results();
         $project_count = $projects[0]->project_count;
@@ -50,9 +51,17 @@ class AdminController extends Controller
         $moderators = $sql2->results();
         $mod_count = $moderators[0]->mod_count;
 
-        $sql3 =  CustomDB::getInstance()->query("SELECT count(*)as feeds   FROM (`feedbacks`) ") ;
-        $feedbacks = $sql3->results();
-        $feeds = $feedbacks[0]->feeds;
+       
+
+        $sql3_1 =  CustomDB::getInstance()->query("SELECT count(*)as feeds_posts   FROM (`feedbacks`) WHERE user_id is not null ") ;
+        $feedbacks2 = $sql3_1->results();
+        $feeds_posts = $feedbacks2[0]->feeds_posts;
+
+        $sql3_2 =  CustomDB::getInstance()->query("SELECT count(*)as feeds_users   FROM (`feedbacks`) WHERE user_id is  null ") ;
+        $feedbacks3 = $sql3_2->results();
+        $feeds_users = $feedbacks3[0]->feeds_users;
+
+        $feeds = $feeds_posts + $feeds_users;
 
         $sql4 =  CustomDB::getInstance()->query("SELECT count(*)as running_projects   FROM (`projects`) WHERE status = 0") ;
         $projects1 = $sql4->results();
@@ -66,14 +75,31 @@ class AdminController extends Controller
         $projects3 = $sql5->results();
         $finished_projects = $projects3[0]->finished_projects;
 
+        $sql6 =  CustomDB::getInstance()->query("SELECT Max(rating)as maxrate   FROM (`users`) ") ;
+        $users1 = $sql6->results();
+        $sql7 =  CustomDB::getInstance()->query("SELECT name as name   FROM (`users`) Where rating = ? ",[$users1[0]->maxrate]) ;
+        $users12 = $sql7->results();
+        $maxuser = $users12[0]->name;
+        $maxrate = $users1[0]->maxrate;
+
+        $sql7 =  CustomDB::getInstance()->query("SELECT count(*)as admins_count   FROM (`admins`) ") ;
+        $admins = $sql7->results();
+        $admins_count = $admins[0]->admins_count;
+
         $counts=array("posts_count"=>$posts_count,
                       "project_count"=>$project_count,
                       "users_count"=>$users_count,
                       "mod_count"=>$mod_count, 
                       "feeds"=>$feeds,
+                      "feeds_posts"=>$feeds_posts,
+                      "feeds_users"=>$feeds_users,
                       "running_projects"=>$running_projects,
                       "pending_projects"=>$pending_projects,
-                      "finished_projects"=>$finished_projects  );
+                      "finished_projects"=>$finished_projects,
+                      "maxuser"=>$maxuser,
+                      "maxrate"=>$maxrate,
+                      "admins_count"=>$admins_count
+                        );
 
         return view('admin')->with('counts',$counts);
     }
@@ -111,9 +137,6 @@ class AdminController extends Controller
        
         $event = $request->input('event');
         $id = $_POST['admin_id'];
-       // die (var_dump($event));
-        
-        //$sql =  CustomDB::getInstance()->query("UPDATE admins SET (`event=?`) WHERE id = ?",[$event,$id]) ;
         $check = CustomDB::getInstance()->query("UPDATE admins SET admins.announcement = ? WHERE id = ? ",[$event, $id])->results();
         
       
@@ -124,4 +147,50 @@ class AdminController extends Controller
          return redirect('/');  
     }
 
+    public function addadmin()
+    {
+        return view('addnewadmin')->with('success', 'admin added');
+    }
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {  
+        
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $birthdate = $request->input('birthdate');
+        $gender = $request->input('gender');
+        $country = $request->input('country');
+        $created_at = Carbon::now()->toDateTimeString();
+      
+    if(Auth::guard('admin')->check())
+      {
+           $check = CustomDB::getInstance()->insert("Admins", array(
+                'email'=> $email,
+                'password' => Hash::make($password),
+                'name' => $name,
+                'birthdate'=> $birthdate, 
+                'gender' => $gender, 
+                'country' => $country,
+                'created_at' => $created_at
+        ))->e();
+               
+        
+         
+        if($check) {
+         
+            return redirect('/')->with('success', 'Admin cretaed');
+        }
+        return redirect('/')->with('error', 'Something wrong');
+    }
+    else 
+         return redirect('/');  
+
+
+    }
 }
