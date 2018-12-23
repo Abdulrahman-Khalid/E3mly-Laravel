@@ -29,10 +29,8 @@ class PostsController extends Controller
     {
         if(Auth::guard('web')->check())
         {
-        $posts = CustomDB::getInstance()->get(array("*"),"posts")->order("created_at DESC")->e()->results();
-        return view('posts.index')->with('posts', $posts);
-            //another code
-            //$posts = Post::orderBy('created_at', 'desc')->paginate(5);
+            $posts = CustomDB::getInstance()->get(array("*"),"posts")->order("created_at DESC")->e()->results();
+            return view('posts.index')->with('posts', $posts);
         }
         else
             return redirect('/');
@@ -108,9 +106,6 @@ class PostsController extends Controller
         $category = htmlspecialchars($request->input('category'),ENT_NOQUOTES, 'UTF-8'); //to avoid xxs attacks
         $created_at = Carbon::now()->toDateTimeString();
         
-        /*$check = CustomDB::getInstance()->query(
-           "INSERT INTO `posts`(`title`, `body`, `min_cost`, `max_cost`, `description_file`, `period`, `user_id`, `category`, `created_at`) 
-        VALUES (?, ? , ?, ? , ?, ?, ?, ? ,?)", [$title, $body, $min_cost, $max_cost, $fileNameToStore, $period, $user_id, $category, $created_at]);*/
         $check = CustomDB::getInstance()->insert("posts", array(
             'title' => $title,
             'body' => $body,
@@ -127,24 +122,7 @@ class PostsController extends Controller
         if($check) {
             return redirect('/posts')->with('success', 'Post Created');
         }
-        return redirect('/posts')->with('error', 'Post Failed');
-        
-        //another way
-       /* DB::insert("INSERT INTO `posts`(`title`, `body`, `min_cost`, `max_cost`, `description_file`, `period`, `user_id`, `category`, `created_at`) 
-        VALUES (?, ? , ?, ? , ?, ?, ?,  ? ,?)",[$title, $body, $min_cost, $max_cost, $fileNameToStore, $period, $user_id, $category, $created_at]);*/
-
-        //another way
-        /*
-        $post = new Post;
-        $post->title = $request->input('title');
-        $post->body = $request->input('body');
-        $post->min_cost = (int)$request->input('min_cost');
-        $post->max_cost = (int)$request->input('max_cost');
-        $post->period = (int)$request->input('period');
-        $post->category = $request->input('category');
-        $post->user_id = Auth::id();
-        $post->save();  
-        */ 
+        return redirect('/posts')->with('error', 'Post Failed'); 
         }
         else     
             return redirect('/');
@@ -212,10 +190,7 @@ class PostsController extends Controller
         
         $check = CustomDB::getInstance()->query("UPDATE posts SET title = ?, body = ?, min_cost = ?, max_cost = ?, period = ?, category = ? WHERE id = ?",[$title,$body,$min_cost,$max_cost,$period,$category,$id])->results();
 
-        //if($check) {
             return redirect()->route('posts.show', $id)->with('success', 'Post updated successfully');
-        //}
-        //return redirect('/posts')->with('error', 'Post Failed');
     }
 
     /**
@@ -229,7 +204,6 @@ class PostsController extends Controller
         if(Auth::guard('web')->check()||Auth::guard('moderator')->check()||Auth::guard('admin')->check())
            {
             $id = (int)$id;
-            //$check = CustomDB::getInstance()->query("DELETE FROM posts WHERE id = ?", [$id]);
             $check = CustomDB::getInstance()->delete("posts")->where("id = ?", [$id])->e();
             if($check)
             {
@@ -240,11 +214,6 @@ class PostsController extends Controller
             {
                 return redirect('/')->with('error', 'Post Not Removed');
             }
-            //another code
-            /*
-            $post = Post::find($id);
-            $post->getInstance()->delete();
-            */
         }
         else
             return redirect('/');  

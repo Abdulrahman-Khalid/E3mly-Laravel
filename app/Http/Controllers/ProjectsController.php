@@ -49,9 +49,7 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-
-        
-        //first, copy the needed data to initialize the project
+         //first, copy the needed data to initialize the project
         $Proposal_id = $_POST['proposal_id'];
         $info = CustomDB::getInstance()->query("SELECT title,posts.body as body, proposals.cost as cost, description_file, period, proposals.user_id as craftman, category, posts.id as post_id_original FROM proposals,posts WHERE posts.id = post_id and proposals.id = ?",[$Proposal_id])->results();
         
@@ -152,10 +150,7 @@ class ProjectsController extends Controller
 
         if($project->status == 0){
             $check = CustomDB::getInstance()->query("UPDATE projects SET status = 1 WHERE id = ?",[$id])->results();
-            //if($check) {
             return redirect()->route('projects.show', $id)->with('success', "Wait for the customer's acceptance");
-            //}
-            //return redirect()->route('projects.show', $id)->with('error', 'Opps! there was an error');
         }
 
         if($project->status == 1){
@@ -168,20 +163,14 @@ class ProjectsController extends Controller
             $craftsman_current_points = $craftsman_current_points[0]->points;
             $craftsman_points = $craftsman_points + $craftsman_current_points;
             $finish_date = Carbon::now('Africa/Cairo')->toDateTimeString();
-            // $check = CustomDB::getInstance()->update("projects", array(
-            // 'finish_date' => $finish_date,
-            // 'rating' => $rating,
-            // 'status' => 2
-            // ))->where("id = ? ",[$project->id])->e();
 
             $sql = CustomDB::getInstance()->query("UPDATE projects SET finish_date = ? , status = 2, rating = ? WHERE id = ?",[$finish_date,$rating,$id])->results();
             $sql1 = CustomDB::getInstance()->query("UPDATE users SET points = ? WHERE id = ?",[$craftsman_points, $project->craftman_id])->results();
-            //if($sql) {
+            $sql2 = Customdb::getInstance()->query("UPDATE users SET num_finished_projects = num_finished_projects + 1 WHERE id = ?",[$project->craftman_id])->results();
+            $sql3 = Customdb::getInstance()->query("UPDATE users SET num_finished_projects = num_finished_projects + 1 WHERE id = ?",[$project->customer_id])->results();
+            $sql4 = Customdb::getInstance()->query("UPDATE users SET rating = rating + ? / num_finished_projects WHERE id = ?",[$rating,$project->craftman_id])->results();
+           
             return redirect()->route('projects.show', $id)->with('success', 'Congratulations on finishing the project');
-            //return redirect()->route('projects.show', $id);
-            //}
-            //return redirect()->route('projects.show', $id)->with('error', 'Opps! there was an error');
-            //return redirect()->route('projects.show', $id);
         }
     }
 
