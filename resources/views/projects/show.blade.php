@@ -192,11 +192,13 @@
                                                     {{Form::submit('Delete', ['class'=> 'btn btn-danger'])}}
                                                 {!! Form::close() !!}
                                             @endif
+                                            @if($message_user->work_file != "nofile.pdf")
                                             <span id="label_span">
                                                 <a href="/public/storage/MessageDescriptions/{{$message_user->work_file}}" download = "{{$message_user->work_file}}">
-                                                    Download
+                                                    Download Attachment
                                                 </a>
                                             </span>
+                                            @endif
                                         </div>
                                     @endforeach
                                     @else

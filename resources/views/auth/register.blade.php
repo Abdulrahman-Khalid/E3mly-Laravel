@@ -72,10 +72,10 @@
                         <div class="form-group row">
                             <label class="col-md-4"></label>
                         <div class="radio">
-                            <label><input type="radio" class="col-md-2" name="gender" value="Male">Male</label>
+                            <label><input type="radio" class="col-md-2" name="gender" value="Male" style="transform: scale(1.5);"> Male</label>
                         </div>
-                        <div class="radio">
-                            <label><input type="radio" class="col-md-2" name="gender" value="Female">Female</label>
+                        <div class="radio" style="margin-left: 50px;">
+                            <label><input type="radio" class="col-md-2" name="gender" value="Female"> Female</label>
                         </div>
                         </div>
 

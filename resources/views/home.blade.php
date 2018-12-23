@@ -135,10 +135,22 @@
                                     @if(count($sentProposals) > 0)
                                     <h1>Select a proposal to edit</h1>
                                         @foreach($sentProposals as $sentProposal)
-                                        <div class="well well-lg">
-                                            <h3><a href="/proposals/{{$sentProposal->id}}/edit">{{$sentProposal->title}}</a></h3>
-                                            <small>proposal sent at {{$sentProposal->created_at}}</small>
-                                        </div>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col col-lg-4">
+                                                    <div class="well well-lg">
+                                                        <h3><a href="/proposals/{{$sentProposal->id}}/edit">{{$sentProposal->title}}</a></h3>
+                                                        <small>proposal sent at {{$sentProposal->created_at}}</small>
+                                                    </div>
+                                                </div>    
+                                                <div class="col col-md-auto">
+                                                    {!! Form::open(['action' => ['ProposalController@destroy', $sentProposal->id], 'method' => 'POST']) !!}
+                                                    {{Form::hidden('_method','DELETE')}}
+                                                    {{Form::submit('Cancel', ['class'=> 'btn btn-outline-danger'])}}
+                                                    {!! Form::close() !!} 
+                                                </div> 
+                                            </div>
+                                        </div>       
                                         @endforeach
                                     @else
                                     <p>You haven't sent any proposal yet</p>

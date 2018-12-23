@@ -27,7 +27,8 @@ class ProjectsController extends Controller
         $user_id = Auth::id();
         $posts = CustomDB::getInstance()->query("SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC",[$user_id])->results();
         $projects = CustomDB::getInstance()->query("SELECT * FROM projects WHERE customer_id = ? OR craftman_id = ?",[$user_id,$user_id])->results();
-        return view('home')->with('user', $user)->with('userPosts', $posts)->with('userProjects',$projects);    
+        $sentProposals = CustomDB::getInstance()->query("SELECT proposals.id as id, title, proposals.created_at as created_at FROM proposals, posts WHERE proposals.user_id = ? and posts.id = proposals.post_id ORDER BY proposals.created_at DESC",[$user_id])->results();
+        return view('home')->with('user', $user)->with('userPosts', $posts)->with('userProjects',$projects)->with('sentProposals',$sentProposals);    
     }
 
     /**
@@ -48,6 +49,8 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
+
+        
         //first, copy the needed data to initialize the project
         $Proposal_id = $_POST['proposal_id'];
         $info = CustomDB::getInstance()->query("SELECT title,posts.body as body, proposals.cost as cost, description_file, period, proposals.user_id as craftman, category, posts.id as post_id_original FROM proposals,posts WHERE posts.id = post_id and proposals.id = ?",[$Proposal_id])->results();
@@ -67,7 +70,15 @@ class ProjectsController extends Controller
 
         $post_id_to_be_deleted = $info[0]->post_id_original;
 
-        //second, create the project
+        //second, take the points from the customer
+        $user_id = Auth::id();
+        $project_cost = (int)($cost);
+        $customers_current_points = CustomDB::getInstance()->query("SELECT points FROM users WHERE id = ?",[$user_id])->results();
+        $customers_current_points = (int)($customers_current_points[0]->points);
+        $customers_current_points = $customers_current_points - $project_cost;
+        $sql = CustomDB::getInstance()->query("UPDATE users SET points = ? WHERE id = ?",[$customers_current_points, $user_id])->results();
+
+        //third, create the project
 
         $check = CustomDB::getInstance()->insert("projects", array(
             'title' => $title,

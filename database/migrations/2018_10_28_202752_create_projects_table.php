@@ -21,7 +21,7 @@ class CreateProjectsTable extends Migration
             $table->string('description_file')->nullable();
             $table->date('suppose_to_finish');
             $table->date('finish_date')->nullable();
-            $table->date('rating')->nullable();
+            $table->float('rating')->nullable();
             $table->integer('status')->default(0);
             $table->unsignedInteger('craftman_id');
             $table->foreign('craftman_id')->references('id')->on('users')->onDelete('cascade');

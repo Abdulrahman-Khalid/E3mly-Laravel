@@ -12,20 +12,22 @@
                 <p class="font-weight-bold font-italic">Proposed cost = {{$proposal->cost}}</p>
                 <div class="container">
                     <div class="row">
+                        @if($proposal->cost <= $available_points)
                         <div class="col-md-auto">
                             <form method="GET" action="/projects/create">
                             <input type="hidden" name="proposal_id" value="{{$proposal->id}}"/>
                             <input class = "btn btn-primary" type="submit" name="action" value="Accept">
                             </form>   
                         </div>
-                        
+                        @else
+                        <button type="button" class="btn btn-dark col-md-auto" style="text-align:center;">You don't have enough points to accept this proposal</button>
+                        @endif
                         <div class="col-md-auto">
                             {!! Form::open(['action' => ['ProposalController@destroy', $proposal->id], 'method' => 'POST']) !!}
                             {{Form::hidden('_method','DELETE')}}
                             {{Form::submit('Decline', ['class'=> 'btn btn-danger'])}}
                             {!! Form::close() !!} 
                         </div>
-
                         @if($proposal->details_file != "nofile.pdf")
                         <div class="col-md-auto">
                             <a href="/public/storage/ProjectDescriptions/{{$proposal->details_file}}" download>

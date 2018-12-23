@@ -29,7 +29,8 @@ class ProposalController extends Controller
         $user_id = Auth::id();
         $posts = CustomDB::getInstance()->query("SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC",[$user_id])->results();
         $projects = CustomDB::getInstance()->query("SELECT * FROM projects WHERE customer_id = ? OR craftman_id = ?",[$user_id,$user_id])->results();
-        return view('home')->with('user', $user)->with('userPosts', $posts)->with('userProjects',$projects);
+        $sentProposals = CustomDB::getInstance()->query("SELECT proposals.id as id, title, proposals.created_at as created_at FROM proposals, posts WHERE proposals.user_id = ? and posts.id = proposals.post_id ORDER BY proposals.created_at DESC",[$user_id])->results();
+        return view('home')->with('user', $user)->with('userPosts', $posts)->with('userProjects',$projects)->with('sentProposals',$sentProposals);
     }
 
     /**
@@ -132,7 +133,9 @@ class ProposalController extends Controller
         $user_id = Auth::id();
         $sql = CustomDB::getInstance()->query("SELECT title, name, proposals.body as body, proposals.created_at as created_at, proposals.id as id, cost, details_file FROM `proposals`,`posts`,`users` WHERE posts.id = ? and post_id = posts.id and posts.user_id = ? and proposals.user_id = users.id ORDER BY proposals.created_at DESC",[$id, $user_id]);
         $proposals = $sql->results();
-        return view('proposals.show')->with('proposals', $proposals);
+        $sql2 = CustomDB::getInstance()->query("SELECT points FROM `users` WHERE id = ?",[$user_id])->results();
+        $available_points = (int)($sql2[0]->points);
+        return view('proposals.show')->with('proposals', $proposals)->with('available_points',$available_points);
     }
 
     /**
@@ -182,7 +185,7 @@ class ProposalController extends Controller
         $check = CustomDB::getInstance()->delete("proposals")->where("id = ?", [$id])->e();
         var_dump($post_id);
         if($check) {
-            return back()->with('success', 'Proposal declined successfully');
+            return back()->with('success', 'Proposal cancelled successfully');
         } 
             return back()->with('error', 'Failed to decline proposal');
     }
