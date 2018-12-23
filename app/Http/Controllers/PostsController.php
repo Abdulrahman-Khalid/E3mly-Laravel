@@ -28,9 +28,14 @@ class PostsController extends Controller
     public function index()
     {
         if(Auth::guard('web')->check())
-        {
+        {   
+             $sql =  CustomDB::getInstance()->query("SELECT 
+                admins.announcement as body
+                FROM (`admins`) Where  admins.announcement is not null ");
+           
+            $events = $sql->results();
             $posts = CustomDB::getInstance()->get(array("*"),"posts")->order("created_at DESC")->e()->results();
-            return view('posts.index')->with('posts', $posts);
+            return view('posts.index')->with('posts', $posts)->with('events', $events);
         }
         else
             return redirect('/');

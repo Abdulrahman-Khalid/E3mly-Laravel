@@ -17,12 +17,12 @@ class CreateFeedbacksTable extends Migration
             $table->increments('id');
             $table->string('type');
             $table->mediumtext('body');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->nullable();
             $table->unsignedInteger('post_id');
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
-            $table->unsignedInteger('moderator_id');
-            $table->foreign('moderator_id')->references('id')->on('moderators')->onDelete('cascade');
+            $table->unsignedInteger('moderator_id')->nullable();
+            $table->foreign('moderator_id')->references('id')->on('moderators')->onDelete('cascade')->nullable();
             $table->timestamp('created_at')->nullable();
         });
     }

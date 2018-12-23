@@ -1,5 +1,19 @@
 @extends('layouts.app')
 @section('content')
+
+
+    @if(count($events) > 0)
+        @foreach($events as $event) 
+             <?php
+              $ev = $event->body;
+             ?>
+
+            <script>
+                alert('{{$ev}}');
+            </script>
+        @endforeach
+    @endif    
+    
     <h1>Posts</h1>
     @if(count($posts) > 0)
         @foreach($posts as $post)
