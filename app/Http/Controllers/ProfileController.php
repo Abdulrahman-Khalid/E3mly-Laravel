@@ -78,13 +78,17 @@ class ProfileController extends Controller
                 FROM (`posts`)
                 WHERE posts.id = ? ", [$post_id]);
             $user_id = $sql->results();
+            $user_id = $user_id[0]->user_id;
             $posts = CustomDB::getInstance()->query("SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC",[$user_id])->results();
+
             $projects = CustomDB::getInstance()->query("SELECT * FROM projects WHERE customer_id = ? OR craftman_id = ?",[$user_id,$user_id])->results();
+
             $sentProposals = CustomDB::getInstance()->query("SELECT proposals.id as id, title, proposals.created_at as created_at FROM proposals, posts WHERE proposals.user_id = ? and posts.id = proposals.post_id ORDER BY proposals.created_at DESC",[$user_id])->results();
             
            
-            $sql2 = CustomDB::getInstance()->get(array("*"), "users")->where("id = ?",[$user_id[0]->user_id])->e();
+            $sql2 = CustomDB::getInstance()->get(array("*"), "users")->where("id = ?",[$user_id])->e();
             $user = $sql2->results();
+
             return view('profile.show')->with('user', $user[0])->with('userPosts', $posts)->with('userProjects',$projects)->with('sentProposals',$sentProposals);
         }
 
